@@ -23,8 +23,8 @@ void factorialArrayTest()
 
 void changeArrayTest()
 {
-//  ASSERT_EQUAL("1;2;1,2;2,2;5;",calcChange(5));
-//	ASSERT_EQUAL("1;2;1,2;2,2;5;1,5;2,5;1,2,5;2,2,5;5,5;1,5,5;2,5,5;1,2,5,5;2,2,5,5;5,5,5;1,5,5,5;",calcChange(16));
+  ASSERT_EQUAL("1;2;1,2;2,2;5;",calcChange(5));
+  ASSERT_EQUAL("1;2;1,2;2,2;5;1,5;2,5;1,2,5;2,2,5;5,5;1,5,5;2,5,5;1,2,5,5;2,2,5,5;5,5,5;1,5,5,5;",calcChange(16));
 }
 
 
