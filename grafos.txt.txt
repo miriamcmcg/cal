@@ -1,0 +1,12 @@
+GRAFOS
+
+
+Grafo (V, E)
+
+V = conjunto de vértices ou nós
+E = conjunto de arestas ou arcos
+
+Propriedades
+- Conectividade (conexo, fortemente conexo, fracamente conexo)
+- Densidade (denso/esparso)
+

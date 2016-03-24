@@ -19,6 +19,39 @@
  * i[0],s[0];i[1],s[1],i[2],s[2]...
  * Exemplo: 1,4;9,1;11,2;18,1;22,0;
  */
-string calcSum(int* sequence, int size);
+string calcSum(int* sequence, int size)
+{
+//	vector<int> sum(size);
+//	vector<int> minInd(size,-1);
+//	vector<int> min(size);
+//
+//	for(int i = 0; i < size; i++)
+//	{
+//		for(int j = 0; j < size; j++)
+//		{
+//			if(i+j >= size)
+//				break;
+//			if(j == 0)
+//			{
+//				sum[i] = sequence[i];
+//			}
+//			else
+//				sum[i] = sum[i] + sequence[i+j];
+//			if(sum[i] < min[j] || minInd[j] == -1)
+//			{
+//				min[j] = sum[i];
+//				minInd[j] = i;
+//			}
+//
+//		}
+//	}
+//
+//	stringstream ss;
+//		for (int i = 0; i < size; i++)
+//			ss << min[i] << "," << minInd[i] << ";";
+//
+//		return ss.str();
+
+}
 
 #endif /* SUM_H_ */
