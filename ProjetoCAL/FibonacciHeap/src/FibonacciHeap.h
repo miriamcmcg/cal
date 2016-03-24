@@ -28,6 +28,7 @@ public:
 	void push(int value);
 	void decreaseKey(Node* node, int newValue);
 	void pop();
+	bool isEmpty();
 
 
 	void printRoots();

@@ -74,9 +74,15 @@ void FibHeap::pop() {
 
 	if (min->child != 0) {
 
-		min->child->previous->insertNodeLeft(min->next);
-		min->child->insertNodeRight(min->previous);
+		if (roots.size() == 1)
+			roots.current = min->child;
+		else {
 
+			min->child->previous->insertNodeLeft(min->next);
+			min->child->insertNodeRight(min->previous);
+		}
+
+		roots.listSize += min->rank;
 		min->unlink();
 	}
 
@@ -106,12 +112,14 @@ void FibHeap::pop() {
 		else {
 
 			if (process->value < saved.node->value) {
-				process->addChild(new Node(saved.node->value));
+
+				process->addChild(new Node(*saved.node));
 				delete saved.node;
 				rank = process->rank;
 			}
 			else {
-				saved.node->addChild(new Node(process->value));
+
+				saved.node->addChild(new Node(*process));
 				delete process;
 				roots.current = saved.node;
 				rank = saved.node->rank;
@@ -127,13 +135,19 @@ void FibHeap::pop() {
 			else numProcesses++;
 
 			ranks[rank-1] = NodePtr();
-
 		}
 
 		numProcesses--;
 	}
 }
 
+
+
+
+bool FibHeap::isEmpty() {
+
+	return roots.isEmpty();
+}
 
 
 

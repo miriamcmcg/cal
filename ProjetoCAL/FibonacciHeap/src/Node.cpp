@@ -41,9 +41,19 @@ Node::Node(int val, Node* previous, Node* next) {
 }
 
 
-Node::Node(Node* n) {
+Node::Node(const Node& n) {
 
-	*this = *n;
+	marked = n.marked;
+	value = n.value;
+	rank = n.rank;
+
+	this->previous = n.previous;
+	this->next = n.next;
+	previous->next = this;
+	next->previous = this;
+
+	this->parent = n.parent;
+	this->child = n.child;
 }
 
 
@@ -57,8 +67,10 @@ Node::~Node() {
 
 void Node::addChild (Node* node) {
 
-	if (child == 0)
+	if (child == 0) {
 		child = node;
+		child->unlink();
+	}
 	else
 		node->insertNode(child, child->next);
 

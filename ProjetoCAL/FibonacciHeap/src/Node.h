@@ -24,7 +24,7 @@ public:
 	Node ();
 	Node (int val);
 	Node (int val, Node* previous, Node* next);
-	Node (Node* n);
+	Node (const Node& n);
 	~Node ();
 	void addChild (Node* node);
 	void insertNode (Node* previous, Node* next);
