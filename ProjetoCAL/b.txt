@@ -1,0 +1,28 @@
+34607524;Praça da República;False
+34607492;Rua de Gonçalo Cristóvão;False
+34607575;Praça da República;False
+38336644;Praça da República;False
+38336635;Rua de Gonçalo Cristóvão;False
+38336639;;False
+95843586;Viaduto de Gonçalo Cristóvão;True
+38336638;Rua de Gonçalo Cristóvão;False
+8367068;Praça da República;False
+34772371;Rua de Camões;False
+220233689;Rua Doutor Alfredo Magalhães;False
+95843585;Rua de Camões;False
+167487346;Praça da República;False
+95843587;;False
+128825641;Rua dos Mártires da Liberdade;False
+210669783;Rua de Camões;False
+210669782;Rua de Gonçalo Cristóvão;False
+8367069;Rua Álvares Cabral;False
+211339129;Praça da República;False
+211342284;Praça da República;False
+211342286;Praça da República;False
+211342283;Praça da República;False
+220233691;Rua de Gonçalo Cristóvão;False
+38336636;Rua de Gonçalo Cristóvão;False
+38336637;Rua de Gonçalo Cristóvão;False
+211339130;Rua de Gonçalo Cristóvão;False
+34607518;Rua do Almada;False
+286005192;;True
