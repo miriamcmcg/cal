@@ -10,16 +10,40 @@
 
 
 
-class TrashDeposit {
-
+class GarbageDeposit {
+private:
 	static unsigned int TrashCounter;
 
-	unsigned int ID;
+	unsigned long ID;
 	unsigned int maxCapacity;
 	unsigned int capacityOccupied;
 
+public:
+	GarbageDeposit(unsigned long ID, unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0) { this->ID = ID; };
+	bool operator==(const GarbageDeposit &gd) const {
+		return ID == gd.ID;
+	}
 
-	TrashDeposit(unsigned int ID, unsigned int maxCapacity, unsigned capacityOccupied);
+
+	unsigned int getCapacityOccupied() const {
+		return capacityOccupied;
+	}
+
+	void setCapacityOccupied(unsigned int capacityOccupied) {
+		this->capacityOccupied = capacityOccupied;
+	}
+
+	unsigned long getID() const {
+		return ID;
+	}
+
+	unsigned int getMaxCapacity() const {
+		return maxCapacity;
+	}
+
+	void setMaxCapacity(unsigned int maxCapacity) {
+		this->maxCapacity = maxCapacity;
+	}
 };
 
 

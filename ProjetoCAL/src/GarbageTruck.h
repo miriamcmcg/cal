@@ -10,11 +10,13 @@
 
 
 class GarbageTruck {
-
+private:
 	unsigned static int TruckCounter;
 
 	unsigned int ID;
 	unsigned int capacity;
+
+public:
 };
 
 

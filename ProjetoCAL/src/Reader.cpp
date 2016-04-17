@@ -28,26 +28,36 @@ void Reader::loadNodes() {
 
 	if (in.good() && in.peek() != ifstream::traits_type::eof()) {
 		while (in.good()) {
-			char dummy;
 			unsigned long node_id;
 			double latitude_deg, longitude_deg, latitude_rad, longitude_rad;
 
+			string content;
+			char dummy;
+			stringstream ss;
 
-			in >> node_id >> dummy;
-			in >> latitude_deg >> dummy;
-			in >> longitude_deg >> dummy;
-			in >> latitude_rad >> dummy;
-			in >> longitude_rad >> dummy;
-
-			nodes.insert(Node(node_id, latitude_deg, longitude_deg, latitude_rad, longitude_rad));
+			getline(in, content);
 
 			if (in.eof())
 				break;
 
 			if (in.fail()) {
-				cerr << "Erro1" << endl;
-				exit(1);
+				cerr << "Error reading nodes.\n" << endl;
+				exit(3);
 			}
+
+			ss.str(content);
+			ss >> node_id >> dummy;
+			ss >> latitude_deg >> dummy;
+			ss >> longitude_deg >> dummy;
+			ss >> latitude_rad >> dummy;
+			ss >> longitude_rad;
+
+
+			double x = EARTH_RADIUS * cos(latitude_rad) * cos(longitude_rad);
+			double y = EARTH_RADIUS * cos(latitude_rad) * sin(longitude_rad);
+			double z = EARTH_RADIUS * cos(latitude_rad);
+
+			nodes.insert(Node(node_id, x, y, z));
 		}
 	}
 
@@ -86,7 +96,7 @@ void Reader::loadRoads() {
 
 
 			if (in.fail()) {
-				cerr << "Erro2" << endl;
+				cerr << "Error reading roads.\n" << endl;
 				exit(2);
 			}
 		}
@@ -118,13 +128,15 @@ void Reader::loadRelations() {
 				break;
 
 			if (in.fail()) {
-				cerr << "Erro3" << endl;
+				cerr << "Error reading relations.\n" << endl;
 				exit(3);
 			}
 
 
 			ss.str(content);
-			ss >> road_id >> dummy >> node1_id >> dummy >> node2_id;
+			ss >> road_id >> dummy;
+			ss >> node1_id >> dummy;
+			ss >> node2_id;
 
 			relations.insert(Relationship(road_id, node1_id, node2_id));
 		}
@@ -144,10 +156,9 @@ void Reader::printInfo() {
 	for (hashNode::iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << i << ": "
 				<< it->node_id << " "
-				<< it->latitude_deg << " "
-				<< it->longitude_deg << " "
-				<< it->latitude_rad << " "
-				<< it->longitude_rad << endl;
+				<< it->x << " "
+				<< it->y << " "
+				<< it->z << endl;
 		i++;
 	}
 

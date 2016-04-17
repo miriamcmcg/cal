@@ -17,6 +17,11 @@
 #include <errno.h>
 #include <error.h>
 #include <tr1/unordered_set>
+#include <cmath>
+
+
+#define EARTH_RADIUS 			6371000
+
 
 using namespace std;
 
@@ -34,16 +39,18 @@ class Node {
 
 public:
 	unsigned long node_id;
-	double latitude_deg;
-	double longitude_deg;
-	double latitude_rad;
-	double longitude_rad;
+	double x;
+	double y;
+	double z;
 
 
-	Node(unsigned long id, double latdeg, double londeg, double latrad, double lonrad) : node_id(id), latitude_deg(latdeg), longitude_deg(londeg),
-			latitude_rad(latrad), longitude_rad(lonrad) {};
+	Node(unsigned long id, double x, double y, double z) : node_id(id), x(x), y(y), z(z) {};
+	Node(unsigned long id) : node_id(id), x(-1), y(-1), z(-1) {};
+
+	double distanceFrom(const Node& n) const { return sqrt((x*x - n.x*n.x) + (y*y - n.y*n.y) + (z*z - n.z*n.z)); };
 
 	bool operator==(const Node &n) const { return node_id == n.node_id; };
+	friend class GarbageCentral;
 };
 
 
@@ -68,8 +75,11 @@ public:
 	bool two_way;
 
 	Road(unsigned long id, string name, bool tw) : road_id(id), road_name(name), two_way(tw) {};
+	Road(unsigned long id) : road_id(id), road_name(""), two_way(false) {};
 
 	bool operator==(const Road &r) const { return road_id == r.road_id; };
+
+	friend class GarbageCentral;
 };
 
 
@@ -97,6 +107,8 @@ public:
 	Relationship(unsigned long rid, unsigned long n1id, unsigned long n2id) : road_id(rid), node1_id(n1id), node2_id(n2id) {};
 
 	bool operator==(const Relationship &r) const { return road_id == r.road_id && node1_id == r.node1_id && node2_id && r.node2_id; };
+
+	friend class GarbageCentral;
 };
 
 
@@ -132,6 +144,9 @@ private:
 public:
 	void readFiles();
 	void printInfo();
+
+
+	friend class GarbageCentral;
 };
 
 
