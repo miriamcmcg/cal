@@ -42,7 +42,7 @@ void Reader::loadNodes() {
 
 			if (in.fail()) {
 				cerr << "Error reading nodes.\n" << endl;
-				exit(3);
+				exit(1);
 			}
 
 			ss.str(content);
@@ -56,6 +56,7 @@ void Reader::loadNodes() {
 			double x = EARTH_RADIUS * cos(latitude_rad) * cos(longitude_rad);
 			double y = EARTH_RADIUS * cos(latitude_rad) * sin(longitude_rad);
 			double z = EARTH_RADIUS * cos(latitude_rad);
+
 
 			nodes.insert(Node(node_id, x, y, z));
 		}
@@ -153,7 +154,7 @@ void Reader::printInfo() {
 	cout << "Nodes" << endl;
 
 	int i = 1;
-	for (hashNode::iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (auto it = begin(nodes); it != end(nodes); it++) {
 		cout << i << ": "
 				<< it->node_id << " "
 				<< it->x << " "
@@ -168,7 +169,7 @@ void Reader::printInfo() {
 	cout << "Roads" << endl;
 
 	i = 1;
-	for (hashRoad::iterator it = roads.begin(); it != roads.end(); it++) {
+	for (auto it = begin(roads); it != end(roads); it++) {
 		cout << i << ": "
 				<< it->road_id << " "
 				<< it->road_name << " ";
@@ -183,7 +184,7 @@ void Reader::printInfo() {
 	cout << "Relations" << endl;
 
 	i = 1;
-	for (hashRelationship::iterator it = relations.begin(); it != relations.end(); it++) {
+	for (auto it = begin(relations); it != end(relations); it++) {
 		cout << i << ": "
 				<< it->road_id << " "
 				<< it->node1_id << " "
