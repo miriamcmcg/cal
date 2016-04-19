@@ -81,9 +81,10 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 pair<vector<GarbageDeposit>, vector<Road>>
 GarbageCentral::getShortestPath(const GarbageDeposit& gd1, const GarbageDeposit& gd2) {
 
-	if (! graph.dijkstraShortestPath(gd1, gd2))
-		throw NoPathFound();
+//	if (! graph.myDijkstraShortestPath(gd1, gd2))
+//		throw NoPathFound();
 
+	graph.myDijkstraShortestPath(gd1);
 	auto res = graph.getPath(gd1, gd2);
 	return res;
 }
@@ -123,11 +124,11 @@ void GarbageCentral::getRoute(vector<GarbageDeposit> to_pick) {
 			auto v1 = result.first;
 			auto v2 = result.second;
 
-//			cout << result.first[0].getID() << "  --->  ";
-//			for (unsigned i = 0; i < v2.size(); i++) {
-//				cout << v2[i].getName() << "  --->  ";
-//			}
-//			cout << result.first[1].getID() << endl;
+			cout << result.first[0].getID() << "  --->  ";
+			for (unsigned i = 0; i < v2.size(); i++) {
+				cout << v2[i].getName() << "  --->  ";
+			}
+			cout << result.first[1].getID() << endl;
 
 			*gd1_it = *gd2_it;
 			pickedCounter++;

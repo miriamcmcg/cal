@@ -15,13 +15,32 @@
 
 using namespace std;
 
+
+
 template <class T, class V> class Edge;
 template <class T, class V> class Graph;
+template <class T, class V> class Vertex;
+
 
 const int NOT_VISITED = 0;
 const int BEING_VISITED = 1;
 const int DONE_VISITED = 2;
 const int INT_INFINITY = INT_MAX;
+
+
+
+
+template <class T, class V>
+struct compareVertex {
+	bool operator()(const Vertex<T, V>* v1, const Vertex<T, V>* v2) const {
+		return v1->getDist() > v2->getDist();
+	}
+};
+
+
+template <class T, class V>
+using fibHeap = boost::heap::fibonacci_heap< Vertex<T,V>*, boost::heap::compare< compareVertex<T, V> > >;
+
 
 /*
  * ================================================================================================
@@ -52,6 +71,7 @@ public:
 
 	Vertex* path;
 	V path_info;
+	typename fibHeap<T,V>::handle_type handle;
 };
 
 
@@ -676,52 +696,42 @@ bool Graph<T,V>::dijkstraShortestPath(const T &s, const T &d) {
 
 
 
-
 template <class T, class V>
-struct compareVertex{
-	bool operator()(const Vertex<T, V>* v1, const Vertex<T, V>* v2)const{
-		return v1->dist > v2->dist;
+void Graph<T,V>::myDijkstraShortestPath(const T &s) {
+
+	for(unsigned int i = 0; i < vertexSet.size(); i++) {
+		vertexSet[i]->path = NULL;
+		vertexSet[i]->dist = INT_INFINITY;
+		vertexSet[i]->visited = false;
 	}
-};
 
 
-//template <class T, class V>
-//void Graph<T,V>::myDijkstraShortestPath(const T &s) {
-//
-//	boost::heap::fibonacci_heap< Vertex<T,V>*, boost::heap::compare<compareVertex<T, V>> > heap();
-//
-//
-//	for(unsigned int i = 0; i < vertexSet.size(); i++) {
-//		vertexSet[i]->path = NULL;
-//		vertexSet[i]->dist = INT_INFINITY;
-//		vertexSet[i]->visited = false;
-//	}
-//
-//
-//
-//	Vertex<T,V> *v = getVertex(s);
-//	v->dist = 0;
-//	heap.push(v);
-//
-//	while (! heap.empty()) {
-//
-//		v = heap.top(); heap.pop();
-//		for(unsigned int i = 0; i < v->adj.size(); i++) {
-//			Vertex<T,V> *w = v->adj[i].dest;
-//			if (v->dist + v->adj[i].weight < w->dist) {
-//				w->dist = v->dist + v->adj[i].weight;
-//				w->path = v;
-//
-//				if (! w->visited) {
-//					w->visited = true;
-//					heap.push(w);
-//				}
-//				else ;
-//					//heap.decrease(w);
-//			}
-//		}
-//	}
-//}
+	fibHeap<T,V> fh;
+
+	Vertex<T,V> *v = getVertex(s);
+	v->dist = 0;
+	fh.push(v);
+
+	while (! fh.empty()) {
+
+		v = fh.top(); fh.pop();
+		for(unsigned int i = 0; i < v->adj.size(); i++) {
+			Vertex<T,V> *w = v->adj[i].dest;
+			if (v->dist + v->adj[i].weight < w->dist) {
+				w->dist = v->dist + v->adj[i].weight;
+				w->path = v;
+				w->path_info = v->adj[i].info;
+
+				if (! w->visited) {
+					w->visited = true;
+					w->handle = fh.push(w);
+				}
+				else
+					fh.decrease(w->handle);
+			}
+		}
+	}
+}
 
 
 template <class T, class V>
