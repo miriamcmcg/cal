@@ -50,7 +50,7 @@ public:
 	Node(unsigned long id, double x, double y, double z) : node_id(id), x(x), y(y), z(z) {};
 	Node(unsigned long id) : node_id(id), x(-1), y(-1), z(-1) {};
 
-	double distanceFrom(const Node& n) const { return sqrt((x*x - n.x*n.x) + (y*y - n.y*n.y) + (z*z - n.z*n.z)); };
+	double distanceFrom(const Node& n) const { return sqrt(pow(x - n.x, 2) + pow(y - n.y, 2) + pow(z - n.z, 2)); };
 
 	bool operator==(const Node &n) const { return node_id == n.node_id; };
 	friend class GarbageCentral;
@@ -70,17 +70,17 @@ struct hash<Node> {
 
 
 
-class Road {
+class Link {
 
 public:
-	unsigned long road_id;
-	string road_name;
+	unsigned long link_id;
+	string link_name;
 	bool two_way;
 
-	Road(unsigned long id, string name, bool tw) : road_id(id), road_name(name), two_way(tw) {};
-	Road(unsigned long id) : road_id(id), road_name(""), two_way(false) {};
+	Link(unsigned long id, string name, bool tw) : link_id(id), link_name(name), two_way(tw) {};
+	Link(unsigned long id) : link_id(id), link_name(""), two_way(false) {};
 
-	bool operator==(const Road &r) const { return road_id == r.road_id; };
+	bool operator==(const Link &r) const { return link_id == r.link_id; };
 	friend class GarbageCentral;
 };
 
@@ -88,10 +88,10 @@ public:
 
 namespace std {
 template <>
-struct hash<Road> {
-	size_t operator() (const Road& r) const {
+struct hash<Link> {
+	size_t operator() (const Link& r) const {
 		size_t seed { 0 };
-		boost::hash_combine(seed, r.road_id);
+		boost::hash_combine(seed, r.link_id);
 		return seed;
 	}
 };
@@ -137,11 +137,11 @@ class Reader {
 
 private:
 	unordered_set<Node> nodes = {};
-	unordered_set<Road> roads = {};
+	unordered_set<Link> links = {};
 	unordered_set<Relationship> relations = {};
 
 	void loadNodes();
-	void loadRoads();
+	void loadLinks();
 	void loadRelations();
 public:
 	void readFiles();

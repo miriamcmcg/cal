@@ -8,22 +8,32 @@
 #ifndef GARBAGEDEPOSIT_H_
 #define GARBAGEDEPOSIT_H_
 
-
+#include <random>
 
 class GarbageDeposit {
 private:
-	static unsigned int TrashCounter;
-
 	unsigned long ID;
 	unsigned int maxCapacity;
 	unsigned int capacityOccupied;
 
 public:
-	GarbageDeposit(unsigned long ID, unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0) { this->ID = ID; };
+	GarbageDeposit(unsigned long ID, unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0) {
+		this->ID = ID;
+		this->maxCapacity = maxCapacity;
+
+		if (capacityOccupied != 0)
+			this->capacityOccupied = capacityOccupied;
+		else
+			this->capacityOccupied = (rand() % 3000) + 100;
+	};
+
 	bool operator==(const GarbageDeposit &gd) const {
 		return ID == gd.ID;
 	}
 
+	bool operator!=(const GarbageDeposit &gd) const {
+		return !(ID == gd.ID);
+	}
 
 	unsigned int getCapacityOccupied() const {
 		return capacityOccupied;

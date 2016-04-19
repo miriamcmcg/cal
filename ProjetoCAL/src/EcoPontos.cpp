@@ -16,10 +16,24 @@ int main() {
 
 	Reader r;
 	r.readFiles();
-	//	r.printInfo();
 
 	GarbageCentral GC(r);
-	GC.print();
+	//	GC.print();
+
+	//	auto vec = GC.getPath(1110698299, 2213493593);
+	//
+	//	auto garbage_deposits = vec.first;
+	//	auto roads = vec.second;
+	//
+	//	unsigned i;
+	//	for(i = 0; i < garbage_deposits.size() - 1; i++) {
+	//		cout << garbage_deposits[i].getID() << "  --->  ";
+	//		cout << roads[i].getName() << "  --->  ";
+	//	}
+	//
+	//	cout << garbage_deposits[i].getID() << endl;
+
+	GC.aux();
 
 	return 0;
 }

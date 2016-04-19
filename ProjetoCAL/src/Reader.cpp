@@ -13,7 +13,7 @@ using namespace std;
 void Reader::readFiles() {
 
 	loadNodes();
-	loadRoads();
+	loadLinks();
 	loadRelations();
 }
 
@@ -68,7 +68,7 @@ void Reader::loadNodes() {
 
 
 
-void Reader::loadRoads() {
+void Reader::loadLinks() {
 
 	ifstream in;
 	in.open("b.txt", ios::in);
@@ -93,7 +93,7 @@ void Reader::loadRoads() {
 				break;
 
 
-			roads.insert(Road(road_id, road_name, two_way));
+			links.insert(Link(road_id, road_name, two_way));
 
 
 			if (in.fail()) {
@@ -166,13 +166,13 @@ void Reader::printInfo() {
 	cout << "***********************************************************\n";
 
 
-	cout << "Roads" << endl;
+	cout << "Links" << endl;
 
 	i = 1;
-	for (auto it = begin(roads); it != end(roads); it++) {
+	for (auto it = begin(links); it != end(links); it++) {
 		cout << i << ": "
-				<< it->road_id << " "
-				<< it->road_name << " ";
+				<< it->link_id << " "
+				<< it->link_name << " ";
 
 		if (it->two_way) cout << "True\n";
 		else cout << "False\n";
