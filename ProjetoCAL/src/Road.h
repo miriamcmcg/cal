@@ -25,37 +25,15 @@ private:
 	bool available;
 
 public:
-	Road() { ID = 0; name = ""; distance = 0; avg_speed = 0; available = true;};
-	Road(unsigned long ID, string name, double distance, double speed)
-	{ this->ID = ID; this->name = name; this->distance = distance; avg_speed = speed; available = true; };
+	Road();
+	Road(unsigned long ID, string name, double distance, double speed);
+	bool operator==(const Road &r) const;
+	unsigned long getID() const;
+	const string& getName() const;
+	double getWeight();
+	void setAvgSpeed(double speed);
+	void setAvailable(bool av);
 
-	bool operator==(const Road &r) const {
-		return ID == r.ID;
-	}
-
-	unsigned long getID() const {
-		return ID;
-	}
-
-	const string& getName() const {
-		return name;
-	}
-
-	double getWeight() {
-
-		if (!available || avg_speed == 0)
-			return DOUBLE_MAX;
-
-		return distance / avg_speed;
-	}
-
-	void setAvgSpeed(double speed) {
-		avg_speed = speed;
-	}
-
-	void setAvailable(bool av) {
-		available = av;
-	}
 };
 
 

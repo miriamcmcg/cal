@@ -17,13 +17,8 @@ private:
 	string name;
 
 public:
-	TreatmentPlant(unsigned int ID, string name) : GarbageDeposit(ID, 0, 0) {
-		this->name = name;
-	}
-
-	const string& getName() const {
-		return name;
-	}
+	TreatmentPlant(unsigned int ID, string name);
+	const string& getName() const;
 };
 
 

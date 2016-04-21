@@ -17,18 +17,13 @@ private:
 	Road *road_ptr;
 
 public:
-	RoadPointer() { road_ptr = nullptr; };
-	RoadPointer(Road *r){ road_ptr = r;}
+	RoadPointer();
+	RoadPointer(Road *r);
+	Road *getPointer();
+	bool operator==(const RoadPointer &r) const;
+	double getWeight();
 
-	Road *getPointer(){return road_ptr;}
 
-	bool operator==(const RoadPointer &r) const {
-		return *road_ptr == *r.road_ptr;
-	}
-
-	double getWeight(){
-		return road_ptr->getWeight();
-	}
 };
 
 
