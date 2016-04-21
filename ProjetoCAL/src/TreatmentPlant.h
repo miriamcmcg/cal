@@ -9,6 +9,7 @@
 #define SRC_TREATMENTPLANT_H_
 
 #include <string>
+#include "GarbageDeposit.h"
 
 using namespace std;
 

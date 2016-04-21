@@ -40,7 +40,7 @@ private:
 	vector<Road*> roads;
 	TreatmentPlant* treat_plant;
 
-	Route getRoute(vector<GarbageDeposit*> to_pick);
+	Data getRoute(vector<GarbageDeposit*> to_pick);
 	FilteredPath filter(const GraphInfo &p);
 	int depositPosition(unsigned int id);
 	int roadPosition(unsigned int id);
@@ -52,7 +52,7 @@ public:
 	FilteredPath getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
 	void updateRoadAvgSpeed(unsigned int roadID, double newSpeed);
 	void updateRoadAvailable(unsigned int roadID, bool available);
-	void createPickingRoute(unsigned int truckID);
+	pair < Route, vector< GarbageDeposit* > > createPickingRoute(unsigned int truckID);
 	void pickGarbage(unsigned int truckID);
 
 	void aux();

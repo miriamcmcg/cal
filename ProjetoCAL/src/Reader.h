@@ -14,8 +14,6 @@
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
-#include <errno.h>
-#include <error.h>
 #include <unordered_set>
 #include <boost/functional/hash.hpp>
 #include <cmath>

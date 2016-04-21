@@ -19,6 +19,7 @@ using namespace std;
 typedef pair<vector<GDPointer>, vector<RoadPointer>> GraphInfo;
 typedef pair<vector<GarbageDeposit*>, vector<Road*>> FilteredPath;
 typedef vector<FilteredPath> Route;
+typedef pair<Route, vector<GarbageDeposit*>> Data;
 
 
 #endif /* SRC_UTILS_H_ */

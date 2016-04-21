@@ -4,6 +4,7 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
+#include "utils.h"
 #include <vector>
 #include <queue>
 #include <list>
@@ -745,16 +746,18 @@ void Graph<T,V>::myDijkstraShortestPath(const T &s) {
 template <class T, class V>
 bool Graph<T,V>::myDijkstraShortestPath(const T &s, const T &d) {
 
+	bool valid_path = false;
+	unsigned int destIndegree = getVertex(d)->getIndegree();
+	unsigned int vertex_count = 0;
+
+	if (destIndegree == 0)
+		throw Unreachable();
+
 	for(unsigned int i = 0; i < vertexSet.size(); i++) {
 		vertexSet[i]->path = NULL;
 		vertexSet[i]->dist = DOUBLE_MAX;
 		vertexSet[i]->visited = false;
 	}
-
-
-	bool valid_path = false;
-	unsigned int destIndegree = getVertex(d)->getIndegree();
-	unsigned int vertex_count = 0;
 
 
 	fibHeap<T,V> fh;

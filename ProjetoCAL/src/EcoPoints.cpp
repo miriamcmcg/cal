@@ -38,8 +38,11 @@ int main() {
 
 	//GC.aux();
 
-	GC.createPickingRoute(1);
+	pair < Route, vector< GarbageDeposit* > > data = GC.createPickingRoute(1);
 	GC.pickGarbage(1);
+
+	if (data.second.size() != 0)
+		cout << data.second[0]->getID() << endl;
 
 	return 0;
 }

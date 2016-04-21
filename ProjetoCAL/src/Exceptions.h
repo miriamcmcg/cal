@@ -9,9 +9,11 @@
 #define SRC_EXCEPTIONS_H_
 
 
-class NoPathFound {};
+class NoOptimalPath {};
 
 class RouteMissingData {};
+
+class Unreachable {};
 
 
 #endif /* SRC_EXCEPTIONS_H_ */

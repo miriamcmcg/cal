@@ -11,10 +11,14 @@
 
 
 
-Route GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
+Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
+
+
 
 	if (to_pick.size() <= 0)
 		throw RouteMissingData();
+
+	vector< GarbageDeposit* > missing_deposits;
 
 	auto map = graph.dfs();
 	auto map_it = begin(map);
@@ -39,18 +43,18 @@ Route GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 			try {
 				FilteredPath section = getShortestPath(*gd1_it, *gd2_it);
 				route.push_back(section);
-			} catch (NoPathFound &e) {
-				throw;
+				*gd1_it = *gd2_it;
+			} catch (NoOptimalPath &e) {
+				missing_deposits.push_back(*gd2_it);
 			}
 
-			*gd1_it = *gd2_it;
 			pickedCounter++;
 		}
 
 		map_it++;
 	}
 
-	return route;
+	return make_pair(route, missing_deposits);
 }
 
 
@@ -112,8 +116,8 @@ int GarbageCentral::truckPosition(unsigned int id) {
 GarbageCentral::GarbageCentral() {
 
 	treat_plant = new TreatmentPlant(0, "GarbageCentral");
-	deposits.push_back(new GarbageDeposit(1, 1000, 100));
-	deposits.push_back(new GarbageDeposit(2, 1000, 9000));
+	deposits.push_back(new GarbageDeposit(1, 1000, 9000));
+	deposits.push_back(new GarbageDeposit(2, 1000, 100));
 	deposits.push_back(new GarbageDeposit(3, 1000, 9000));
 	deposits.push_back(new GarbageDeposit(4, 1000, 100));
 
@@ -133,7 +137,7 @@ GarbageCentral::GarbageCentral() {
 	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[2]), RoadPointer(roads[2]));
 	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[2]), RoadPointer(roads[3]));
 	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[3]), RoadPointer(roads[4]));
-	graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[3]), RoadPointer(roads[5]));
+	//graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[3]), RoadPointer(roads[5]));
 
 
 	trucks.push_back(GarbageTruck(8000));
@@ -218,7 +222,7 @@ FilteredPath GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit
 	auto gd2_ptr = GDPointer(gd2);
 
 	if (! graph.myDijkstraShortestPath(gd1_ptr, gd2_ptr))
-		throw NoPathFound();
+		throw NoOptimalPath();
 
 	auto res = graph.getPath(gd1_ptr, gd2_ptr);
 	auto info = filter(res);
@@ -251,7 +255,7 @@ void GarbageCentral::updateRoadAvailable(unsigned int ID, bool available) {
 
 
 
-void GarbageCentral::createPickingRoute(unsigned int truckID) {
+Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 
 	int pos = truckPosition(truckID);
 
@@ -263,24 +267,22 @@ void GarbageCentral::createPickingRoute(unsigned int truckID) {
 	for (unsigned i = 0; i < deposits.size(); i++) {
 		if ( truck.addCarrying(deposits[i]->getCapacityOccupied()) ) {
 			to_pick.push_back(deposits[i]);
-			i++;
 		}
 	}
 
-	Route route;
+
+	Data data;
 	try {
-		route = getRoute(to_pick);
-	} catch (NoPathFound& e) {
-		cout << "Can't link path!\n";
-		return;
+		data = getRoute(to_pick);
 	}
 	catch (RouteMissingData& e) {
 		cout << "Truck doesn't have enough capacity\n";
-		return;
+	    throw;
 	}
 
 
-	truck.addPickingRoute(route);
+	truck.addPickingRoute(data.first);
+	return data;
 }
 
 

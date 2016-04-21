@@ -2,7 +2,7 @@
 #include <random>
 
 
-GarbageDeposit::GarbageDeposit(unsigned long ID, unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0) {
+GarbageDeposit::GarbageDeposit(unsigned long ID, unsigned int maxCapacity, unsigned capacityOccupied) {
 	this->ID = ID;
 	this->maxCapacity = maxCapacity;
 
