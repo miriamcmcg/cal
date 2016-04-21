@@ -54,6 +54,20 @@ public:
 	void setMaxCapacity(unsigned int maxCapacity) {
 		this->maxCapacity = maxCapacity;
 	}
+
+
+	void empty() {
+		capacityOccupied = 0;
+	}
+
+
+	void addCapacityOccupied (unsigned int quantity) {
+		// TODO THROW
+		if (capacityOccupied + quantity > maxCapacity)
+			;
+
+		capacityOccupied += quantity;
+	}
 };
 
 

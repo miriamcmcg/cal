@@ -11,5 +11,7 @@
 
 class NoPathFound {};
 
+class RouteMissingData {};
+
 
 #endif /* SRC_EXCEPTIONS_H_ */

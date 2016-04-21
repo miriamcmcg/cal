@@ -21,7 +21,7 @@
 #include <cmath>
 
 
-#define EARTH_RADIUS 			6371000
+#define EARTH_RADIUS_KM 			6371
 
 
 using namespace std;

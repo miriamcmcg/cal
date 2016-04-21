@@ -53,9 +53,9 @@ void Reader::loadNodes() {
 			ss >> longitude_rad;
 
 
-			double x = EARTH_RADIUS * cos(latitude_rad) * cos(longitude_rad);
-			double y = EARTH_RADIUS * cos(latitude_rad) * sin(longitude_rad);
-			double z = EARTH_RADIUS * cos(latitude_rad);
+			double x = EARTH_RADIUS_KM * cos(latitude_rad) * cos(longitude_rad);
+			double y = EARTH_RADIUS_KM * cos(latitude_rad) * sin(longitude_rad);
+			double z = EARTH_RADIUS_KM * cos(latitude_rad);
 
 
 			nodes.insert(Node(node_id, x, y, z));
