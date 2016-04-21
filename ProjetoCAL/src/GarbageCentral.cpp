@@ -46,6 +46,8 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 				*gd1_it = *gd2_it;
 			} catch (NoOptimalPath &e) {
 				missing_deposits.push_back(*gd2_it);
+			} catch (Unreachable& e) {
+				throw;
 			}
 
 			pickedCounter++;
@@ -221,8 +223,12 @@ FilteredPath GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit
 	auto gd1_ptr = GDPointer(gd1);
 	auto gd2_ptr = GDPointer(gd2);
 
+	try {
 	if (! graph.myDijkstraShortestPath(gd1_ptr, gd2_ptr))
 		throw NoOptimalPath();
+	} catch(Unreachable& e){
+		throw;
+	}
 
 	auto res = graph.getPath(gd1_ptr, gd2_ptr);
 	auto info = filter(res);
@@ -274,10 +280,11 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 	Data data;
 	try {
 		data = getRoute(to_pick);
-	}
-	catch (RouteMissingData& e) {
+	} catch (RouteMissingData& e) {
 		cout << "Truck doesn't have enough capacity\n";
-	    throw;
+		throw;
+	} catch (Unreachable& e){
+		throw;
 	}
 
 

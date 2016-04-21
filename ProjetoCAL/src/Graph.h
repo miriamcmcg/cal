@@ -5,6 +5,7 @@
 #define GRAPH_H_
 
 #include "utils.h"
+#include "Exceptions.h"
 #include <vector>
 #include <queue>
 #include <list>
