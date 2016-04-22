@@ -28,6 +28,7 @@ public:
 	bool addCarrying(unsigned int quantity);
 	Route unload();
 	void addPickingRoute(Route route);
+	void empty();
 
 
 };

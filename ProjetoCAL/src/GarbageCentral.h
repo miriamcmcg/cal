@@ -18,14 +18,10 @@
 #include "GDPointer.h"
 #include "RoadPointer.h"
 #include "utils.h"
+#include <iomanip>
 #include <random>
 #include <vector>
-
-
-
-#define SOURCE			0
-#define	DESTINATION		1
-
+#include <algorithm>
 
 using namespace std;
 
@@ -45,6 +41,7 @@ private:
 	int depositPosition(unsigned int id);
 	int roadPosition(unsigned int id);
 	int truckPosition(unsigned int id);
+	void sortDeposits();
 public:
 	GarbageCentral();
 	GarbageCentral(const Reader& r);
@@ -53,7 +50,13 @@ public:
 	void updateRoadAvgSpeed(unsigned int roadID, double newSpeed);
 	void updateRoadAvailable(unsigned int roadID, bool available);
 	pair < Route, vector< GarbageDeposit* > > createPickingRoute(unsigned int truckID);
+	pair < Route, vector< GarbageDeposit* > > createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id);
 	void pickGarbage(unsigned int truckID);
+	void listTrucks();
+	bool hasTruck(unsigned int id);
+	void listDeposits();
+	bool hasDeposit(unsigned int id);
+	void listRoads();
 
 	void aux();
 	void print();

@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Reader.h"
 #include "GarbageCentral.h"
+#include "Interface.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ int main() {
 
 	GarbageCentral GC = GarbageCentral();
 
+	mainMenu(GC);
 
 	//	GC.print();
 

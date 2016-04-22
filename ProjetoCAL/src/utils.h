@@ -14,6 +14,10 @@
 #include "GarbageDeposit.h"
 #include "Road.h"
 
+#define SOURCE			0
+#define	DESTINATION		1
+
+
 using namespace std;
 
 typedef pair<vector<GDPointer>, vector<RoadPointer>> GraphInfo;

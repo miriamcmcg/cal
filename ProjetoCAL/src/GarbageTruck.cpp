@@ -55,3 +55,7 @@ Route GarbageTruck::unload() {
 void GarbageTruck::addPickingRoute(Route route) {
 	routes.push(route);
 }
+
+void GarbageTruck::empty(){
+	carrying = 0;
+}
