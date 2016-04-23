@@ -49,8 +49,8 @@ public:
 	FilteredPath getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
 	void updateRoadAvgSpeed(unsigned int roadID, double newSpeed);
 	void updateRoadAvailable(unsigned int roadID, bool available);
-	pair < Route, vector< GarbageDeposit* > > createPickingRoute(unsigned int truckID);
-	pair < Route, vector< GarbageDeposit* > > createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id);
+	Data createPickingRoute(unsigned int truckID);
+	Data createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id);
 	void pickGarbage(unsigned int truckID);
 	void listTrucks();
 	bool hasTruck(unsigned int id);

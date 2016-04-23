@@ -27,13 +27,14 @@ private:
 public:
 	Road();
 	Road(unsigned long ID, string name, double distance, double speed);
+	virtual ~Road() {};
 	bool operator==(const Road &r) const;
 	unsigned long getID() const;
 	const string& getName() const;
 	double getWeight();
 	void setAvgSpeed(double speed);
 	void setAvailable(bool av);
-
+	virtual string print() const;
 };
 
 

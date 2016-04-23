@@ -20,6 +20,7 @@ private:
 public:
 	TreatmentPlant(unsigned int ID, string name);
 	const string& getName() const;
+	virtual string print() const override;
 };
 
 

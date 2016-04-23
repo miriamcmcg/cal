@@ -47,9 +47,9 @@ void GarbageDeposit::empty() {
 
 
 void GarbageDeposit::addCapacityOccupied (unsigned int quantity) {
-	// TODO THROW
-	if (capacityOccupied + quantity > maxCapacity)
-		;
 
-	capacityOccupied += quantity;
+	if (capacityOccupied + quantity >= maxCapacity)
+		capacityOccupied = maxCapacity;
+	else
+		capacityOccupied += quantity;
 }

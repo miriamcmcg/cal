@@ -9,6 +9,8 @@
 #define GARBAGEDEPOSIT_H_
 
 #include <random>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -19,6 +21,7 @@ private:
 	unsigned int capacityOccupied;
 public:
 	GarbageDeposit(unsigned long ID, unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0);
+	virtual ~GarbageDeposit() {};
 	bool operator==(const GarbageDeposit &gd) const;
 	bool operator!=(const GarbageDeposit &gd) const;
 	unsigned int getCapacityOccupied() const;
@@ -29,6 +32,7 @@ public:
 	void addCapacityOccupied (unsigned int quantity);
 	void setMaxCapacity(unsigned int maxCapacity);
 
+	virtual string print() const;
 };
 
 

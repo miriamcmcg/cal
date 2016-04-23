@@ -9,7 +9,8 @@
 #define GARBAGETRUCK_H_
 
 #include "utils.h"
-#include <queue>
+#include "Exceptions.h"
+#include <deque>
 
 
 class GarbageTruck {
@@ -18,7 +19,7 @@ private:
 	unsigned int ID;
 	unsigned int capacity;
 	unsigned int carrying;
-	queue<Route> routes;
+	deque<Route> routes;
 
 public:
 	GarbageTruck(unsigned int capacity);

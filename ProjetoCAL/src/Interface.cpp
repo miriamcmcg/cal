@@ -235,7 +235,7 @@ vector<unsigned int> manualPicking(GarbageCentral& gc){
 		int x, y;
 		getCursorXY(x,y);
 
-		cout << "Insert an ID (0 to stop inserting): ";
+		cout << "Insert an ID - by level of emergency (0 to stop inserting): ";
 
 
 		getEntry(op);
@@ -319,7 +319,7 @@ void createPickRoute(GarbageCentral& gc){
 	case 2:
 		deposits_id = manualPicking(gc);
 		try{
-			data = gc.createPickingRoute( t, deposits_id);
+			data = gc.createPickingRoute(t, deposits_id);
 		}catch (RouteMissingData& e) {
 			cout << "Truck doesn't have enough capacity" << endl;
 		} catch (Unreachable& e){
@@ -330,13 +330,19 @@ void createPickRoute(GarbageCentral& gc){
 		return;
 	}
 
-	//	//		if (i != 0)
-	//	cout << info.first[0]->getID() << "  --->  ";
-	//	//		else
-	//	//			cout << static_cast<TreatmentPlant*>(info.first[0])->getName() << "  --->  ";
-	//	for (unsigned i = 0; i < v2.size(); i++) {
-	//		cout << v2[i]->getName() << "  --->  ";
-	//	}
-	//	cout << info.first[1]->getID() << endl;
-	//	cout << endl;
+
+	auto route = data.first;
+	auto failed = data.second;
+
+	cout << "Route generated for truck Nr. " << t << ":" << endl;
+	for (unsigned i = 0; i < route.size(); i++) {
+		auto info = route[i].first;
+		auto roads = route[i].second;
+
+		cout << info[SOURCE]->print() << "  --->  ";
+		for (unsigned j = 0; j < roads.size(); j++) {
+			cout << roads[j]->print() << "  --->  ";
+		}
+		cout << info[DESTINATION]->print() << endl;
+	}
 }

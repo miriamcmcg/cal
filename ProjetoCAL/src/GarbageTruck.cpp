@@ -42,20 +42,27 @@ bool GarbageTruck::addCarrying(unsigned int quantity) {
 
 
 Route GarbageTruck::unload() {
-	// TODO THROW
-	if (routes.empty()) ;
+	if (routes.empty())
+		throw NoRouteAvailable();
 
 	carrying = 0;
 	Route r = routes.front();
-	routes.pop();
+	routes.pop_front();
 
 	return r;
 }
 
 void GarbageTruck::addPickingRoute(Route route) {
-	routes.push(route);
+	routes.push_back(route);
 }
 
 void GarbageTruck::empty(){
 	carrying = 0;
+}
+
+
+string GarbageDeposit::print() const {
+	stringstream ss;
+	ss << ID;
+	return ss.str();
 }

@@ -46,3 +46,8 @@ void Road::setAvgSpeed(double speed) {
 void Road::setAvailable(bool av) {
 	available = av;
 }
+
+
+string Road::print() const {
+	return name;
+}

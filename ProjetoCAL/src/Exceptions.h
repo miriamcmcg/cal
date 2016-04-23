@@ -15,5 +15,10 @@ class RouteMissingData {};
 
 class Unreachable {};
 
+class NoRouteAvailable {};
+
+class RoadNonExistent {};
+
+class TruckNonExistent {};
 
 #endif /* SRC_EXCEPTIONS_H_ */

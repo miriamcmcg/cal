@@ -7,3 +7,8 @@ TreatmentPlant::TreatmentPlant(unsigned int ID, string name) : GarbageDeposit(ID
 const string& TreatmentPlant::getName() const {
 	return name;
 }
+
+
+string TreatmentPlant::print() const {
+	return name;
+}
