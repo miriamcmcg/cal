@@ -12,8 +12,6 @@
 
 Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 
-
-
 	if (to_pick.size() <= 0)
 		throw RouteMissingData();
 
@@ -45,8 +43,6 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 				*gd1_it = *gd2_it;
 			} catch (NoOptimalPath &e) {
 				missing_deposits.push_back(*gd2_it);
-			} catch (Unreachable& e) {
-				throw;
 			}
 
 			pickedCounter++;
@@ -82,7 +78,7 @@ FilteredPath GarbageCentral::filter(const GraphInfo &p) {
 
 
 
-int GarbageCentral::depositPosition(unsigned int id){
+int GarbageCentral::depositPosition(unsigned int id) const {
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		if (deposits[i]->getID() == id)
 			return i;
@@ -92,7 +88,7 @@ int GarbageCentral::depositPosition(unsigned int id){
 
 
 
-int GarbageCentral::roadPosition(unsigned int id) {
+int GarbageCentral::roadPosition(unsigned int id) const {
 	for (unsigned int i = 0; i < roads.size(); i++) {
 		if (roads[i]->getID() == id)
 			return i;
@@ -103,13 +99,21 @@ int GarbageCentral::roadPosition(unsigned int id) {
 
 
 
-int GarbageCentral::truckPosition(unsigned int id) {
+int GarbageCentral::truckPosition(unsigned int id) const {
 	for (unsigned int i = 0; i < trucks.size(); i++) {
 		if (trucks[i].getID() == id)
 			return i;
 	}
 
 	return -1;
+}
+
+
+
+void GarbageCentral::sortDeposits(){
+	sort(deposits.begin(), deposits.end(), [](const GarbageDeposit* a, const GarbageDeposit* b) {
+		return a->getCapacityOccupied() > b->getCapacityOccupied();
+	});
 }
 
 
@@ -138,12 +142,17 @@ GarbageCentral::GarbageCentral() {
 	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[2]), RoadPointer(roads[2]));
 	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[2]), RoadPointer(roads[3]));
 	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[3]), RoadPointer(roads[4]));
-	//graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[3]), RoadPointer(roads[5]));
+	graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[3]), RoadPointer(roads[5]));
 
 
-	trucks.push_back(GarbageTruck(8000));
-	trucks.push_back(GarbageTruck(10000));
-	trucks.push_back(GarbageTruck(5000));
+
+	ifstream in("trucks.txt");
+	int cap;
+	if (in.good()) {
+		while (in >> cap) {
+			trucks.push_back(GarbageTruck(cap));
+		}
+	}
 }
 
 
@@ -199,6 +208,17 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 	}
 
 	sortDeposits();
+
+
+
+
+	ifstream in("trucks.txt");
+	int cap;
+	if (in.good()) {
+		while (in >> cap) {
+			trucks.push_back(GarbageTruck(cap));
+		}
+	}
 }
 
 
@@ -210,6 +230,14 @@ GarbageCentral::~GarbageCentral() {
 
 	for (unsigned i = 0; i < roads.size(); i++)
 		delete roads[i];
+
+
+	ofstream out("trucks.txt");
+	if (out.good()) {
+		for (unsigned i = 0; i < trucks.size(); i++) {
+			out << trucks[i].getCapacity() << endl;
+		}
+	}
 }
 
 
@@ -219,12 +247,8 @@ FilteredPath GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit
 	auto gd1_ptr = GDPointer(gd1);
 	auto gd2_ptr = GDPointer(gd2);
 
-	try {
-		if (! graph.myDijkstraShortestPath(gd1_ptr, gd2_ptr))
-			throw NoOptimalPath();
-	} catch(Unreachable& e){
-		throw;
-	}
+	if (! graph.myDijkstraShortestPath(gd1_ptr, gd2_ptr))
+		throw NoOptimalPath();
 
 	auto res = graph.getPath(gd1_ptr, gd2_ptr);
 	auto info = filter(res);
@@ -278,16 +302,21 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 	try {
 		data = getRoute(to_pick);
 	} catch (RouteMissingData& e) {
-		cout << "Truck doesn't have enough capacity\n";
-		throw;
-	} catch (Unreachable& e){
 		throw;
 	}
 
 
-	truck.addPickingRoute(data.first);
+
+	trucks[pos].empty();
+	auto route = data.first;
+	route[0].first[SOURCE]->empty();
+	for (auto section : route) {
+		section.first[DESTINATION]->empty();
+	}
+
 	return data;
 }
+
 
 Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id) {
 
@@ -311,119 +340,77 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned in
 		data = getRoute(to_pick);
 	} catch (RouteMissingData& e) {
 		throw;
-	} catch (Unreachable& e){
-		throw;
 	}
 
 
-	truck.addPickingRoute(data.first);
-	return data;
-}
-
-void GarbageCentral::sortDeposits(){
-	sort(deposits.begin(), deposits.end(), [](const GarbageDeposit* a, const GarbageDeposit* b) {
-		return a->getCapacityOccupied() > b->getCapacityOccupied();
-	});
-}
-
-void GarbageCentral::pickGarbage(unsigned int truckID) {
-
-	int pos = truckPosition(truckID);
-
-	if (pos == -1)
-		throw TruckNonExistent();
-
-	Route route = trucks[pos].unload();
-
+	trucks[pos].empty();
+	auto route = data.first;
+	route[0].first[SOURCE]->empty();
 	for (auto section : route) {
-		section.first[SOURCE]->empty();
 		section.first[DESTINATION]->empty();
 	}
 
+	return data;
+}
+
+
+
+void GarbageCentral::updateDepositOccupied(unsigned int depositID, unsigned int capOcup) {
+
+	int pos = depositPosition(depositID);
+
+	if (pos == -1)
+		throw DepositNonExistent();
+
+	deposits[pos]->setCapacityOccupied(capOcup);
 	sortDeposits();
 }
 
 
 
-void GarbageCentral::aux() {
-
-	vector<GarbageDeposit*> vec;
-	vec.push_back(deposits[0]);
-	vec.push_back(deposits[2]);
-
-	getRoute(vec);
-
-	updateRoadAvgSpeed(2, 20);
-	getRoute(vec);
-
-	updateRoadAvgSpeed(0, 0);
-	getRoute(vec);
-
-	cout << "-----------------------------\n";
-	updateRoadAvgSpeed(2, 70);
-	updateRoadAvgSpeed(0, 50);
-	vec.pop_back();
-	vec.push_back(deposits[3]);
-
-	getRoute(vec);
-
-	updateRoadAvailable(3, false);
-	getRoute(vec);
-
-	updateRoadAvailable(2, false);
-	getRoute(vec);
-
-	updateRoadAvailable(4, false);
-	getRoute(vec);
-}
-
-
-
-void GarbageCentral::print() {
-
-	vector<GDPointer> v = graph.dfs();
-
-	for (auto gd : v) {
-		cout << gd.getPointer()->getID() << endl;
-	}
-}
-
-
-void GarbageCentral::listTrucks(){
-	cout << " " << setw(4) << "ID" << " |" <<  setw(9) << "Capacity" << " |" << endl;
-		cout << " -----------------" << endl;
+void GarbageCentral::listTrucks() const {
+	cout << " " << setw(4) << "ID" << " |" <<  setw(10) << "Max Capacity" << " |" << endl;
+	cout << " -----------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-				<< " |" << setw(9) << trucks[i].getCapacity()<< " |" <<  endl;
+																																<< " |" << setw(10) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
 
-bool GarbageCentral::hasTruck(unsigned int id){
+bool GarbageCentral::hasTruck(unsigned int id) const {
 	return (truckPosition(id) != -1);
 }
 
 
-void GarbageCentral::listDeposits(){
-	cout << " " << setw(15) << "ID" << " |" <<  setw(10) << "Capacity" << " |" << endl;
+void GarbageCentral::listDeposits() const {
+	cout << " " << setw(15) << "ID" << " |" <<  setw(15) << "Capacity Occupied" <<
+			" |" << setw(10) << "Max Capacity" << " |" << endl;
 	cout << " -----------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
-		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(10)
-				<< deposits[i]->getCapacityOccupied() << " |" << endl;
+		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
+																																<< deposits[i]->getCapacityOccupied() << " |"
+																																<< deposits[i]->getMaxCapacity() << " |" << endl;
 	}
 }
 
 
-bool GarbageCentral::hasDeposit(unsigned int id){
+bool GarbageCentral::hasDeposit(unsigned int id) const {
 	return (depositPosition(id) != -1);
 }
 
 
-void GarbageCentral::listRoads(){
+void GarbageCentral::listRoads() const {
 	cout << " " << setw(15) << "ID" << " |" <<  setw(25) << "Name" << " |" << endl;
 	cout << " --------------------------------------------" << endl;
 	for (unsigned int i = 0; i < roads.size(); i++){
 		cout << " " << setw(15) << roads[i]->getID() << " |"
 				<< setw(25) << roads[i]->getName() << " |\n";
 	}
+}
+
+
+
+bool GarbageCentral::hasRoad(unsigned int id) const {
+	return (roadPosition(id) != -1);
 }

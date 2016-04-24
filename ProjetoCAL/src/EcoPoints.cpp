@@ -1,9 +1,6 @@
 //============================================================================
-// Name        : EcoPontos.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Name        : EcoPoints.cpp
+// Author      : Bruno Barros, João Barbosa, Miriam Gonçalves
 //============================================================================
 
 #include <iostream>

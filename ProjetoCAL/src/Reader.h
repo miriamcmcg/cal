@@ -145,7 +145,6 @@ public:
 	void readFiles();
 	void printInfo();
 
-
 	friend class GarbageCentral;
 };
 

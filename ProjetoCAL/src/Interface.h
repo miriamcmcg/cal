@@ -31,6 +31,9 @@ void getEntry(int &entrada);
 void getEntry(int &entrada, int start, int end);
 void mainMenu(GarbageCentral& gc);
 void createPickRoute(GarbageCentral& gc);
+void updateCapacityOccupied(GarbageCentral& gc);
+void updateAvgSpeedRoad(GarbageCentral& gc);
+void updateAvailableRoad(GarbageCentral& gc);
 
 
 #endif /* SRC_INTERFACE_H_ */

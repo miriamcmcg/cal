@@ -38,28 +38,26 @@ private:
 
 	Data getRoute(vector<GarbageDeposit*> to_pick);
 	FilteredPath filter(const GraphInfo &p);
-	int depositPosition(unsigned int id);
-	int roadPosition(unsigned int id);
-	int truckPosition(unsigned int id);
+	int depositPosition(unsigned int id) const;
+	int roadPosition(unsigned int id) const;
+	int truckPosition(unsigned int id) const;
 	void sortDeposits();
+	FilteredPath getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
 public:
 	GarbageCentral();
 	GarbageCentral(const Reader& r);
 	~GarbageCentral();
-	FilteredPath getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
 	void updateRoadAvgSpeed(unsigned int roadID, double newSpeed);
 	void updateRoadAvailable(unsigned int roadID, bool available);
 	Data createPickingRoute(unsigned int truckID);
 	Data createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id);
-	void pickGarbage(unsigned int truckID);
-	void listTrucks();
-	bool hasTruck(unsigned int id);
-	void listDeposits();
-	bool hasDeposit(unsigned int id);
-	void listRoads();
-
-	void aux();
-	void print();
+	void updateDepositOccupied(unsigned int depositID, unsigned int capOcup);
+	void listTrucks() const;
+	bool hasTruck(unsigned int id) const;
+	void listDeposits() const;
+	bool hasDeposit(unsigned int id) const;
+	void listRoads() const;
+	bool hasRoad(unsigned int id) const;
 };
 
 

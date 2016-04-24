@@ -13,12 +13,13 @@ class NoOptimalPath {};
 
 class RouteMissingData {};
 
-class Unreachable {};
-
 class NoRouteAvailable {};
+
+class DepositNonExistent {};
 
 class RoadNonExistent {};
 
 class TruckNonExistent {};
+
 
 #endif /* SRC_EXCEPTIONS_H_ */

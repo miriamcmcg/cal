@@ -751,9 +751,6 @@ bool Graph<T,V>::myDijkstraShortestPath(const T &s, const T &d) {
 	unsigned int destIndegree = getVertex(d)->getIndegree();
 	unsigned int vertex_count = 0;
 
-	if (destIndegree == 0)
-		throw Unreachable();
-
 	for(unsigned int i = 0; i < vertexSet.size(); i++) {
 		vertexSet[i]->path = NULL;
 		vertexSet[i]->dist = DOUBLE_MAX;

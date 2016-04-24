@@ -19,19 +19,13 @@ private:
 	unsigned int ID;
 	unsigned int capacity;
 	unsigned int carrying;
-	deque<Route> routes;
-
 public:
 	GarbageTruck(unsigned int capacity);
 	unsigned int getCapacity() const;
 	unsigned int getCarrying() const;
 	unsigned int getID() const;
 	bool addCarrying(unsigned int quantity);
-	Route unload();
-	void addPickingRoute(Route route);
 	void empty();
-
-
 };
 
 

@@ -53,3 +53,10 @@ void GarbageDeposit::addCapacityOccupied (unsigned int quantity) {
 	else
 		capacityOccupied += quantity;
 }
+
+
+string GarbageDeposit::print() const {
+	stringstream ss;
+	ss << ID;
+	return ss.str();
+}

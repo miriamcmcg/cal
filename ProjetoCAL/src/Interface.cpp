@@ -92,6 +92,7 @@ void getEntry(unsigned int &entrada)
 
 		if (cin.fail())
 		{
+			clearline();
 			cout << "Error. Insert valid data.\n";
 			cin.clear();
 		}
@@ -119,6 +120,7 @@ void getEntry(int &entrada)
 
 		if (cin.fail())
 		{
+			clearline();
 			cout << "Error. Insert valid data.\n";
 			cin.clear();
 		}
@@ -146,6 +148,7 @@ void getEntry(int &entrada, int start, int end)
 
 		if (cin.fail())
 		{
+			clearline();
 			cout << "Error. Insert valid data.\n";
 			cin.clear();
 		}
@@ -163,6 +166,8 @@ void getEntry(int &entrada, int start, int end)
 	} while (!valid);
 }
 
+
+
 void mainMenu(GarbageCentral& gc){
 
 	while(true)
@@ -172,14 +177,16 @@ void mainMenu(GarbageCentral& gc){
 		cout << "ECOPoints" << endl << endl;
 
 		cout << " 1 - Create a picking route" << endl;
-		cout << " 2 - Send a truck" << endl;
-		cout << " 3 - Display trucks list" << endl;
-		cout << " 4 - Display containers list" << endl;
-		cout << " 5 - Display streets list" << endl;
+		cout << " 2 - Display trucks list" << endl;
+		cout << " 3 - Display containers list" << endl;
+		cout << " 4 - Display streets list" << endl;
+		cout << " 5 - Update deposit's capacity occupied" << endl;
+		cout << " 6 - Update speed on a road" << endl;
+		cout << " 7 - Update road's availability" << endl;
 		cout << " 0 - Exit Program" << endl << endl;
 
 		cout << "Choose an option: ";
-		getEntry(op, 0, 5);
+		getEntry(op, 0, 7);
 
 		ClearScreen();
 
@@ -189,20 +196,25 @@ void mainMenu(GarbageCentral& gc){
 			createPickRoute(gc);
 			break;
 		case 2:
-			;
-			break;
-		case 3:
 			cout << "Trucks: " << endl << endl;
 			gc.listTrucks();
 			break;
-		case 4:
+		case 3:
 			cout << "Containers: " << endl << endl;
 			gc.listDeposits();
 			break;
-		case 5:
+		case 4:
 			cout << "Streets: " << endl << endl;
 			gc.listRoads();
-			;
+			break;
+		case 5:
+			updateCapacityOccupied(gc);
+			break;
+		case 6:
+			updateAvgSpeedRoad(gc);
+			break;
+		case 7:
+			updateAvailableRoad(gc);
 			break;
 		case 0:
 			return;
@@ -211,6 +223,8 @@ void mainMenu(GarbageCentral& gc){
 		waitReturn();
 	}
 }
+
+
 
 vector<unsigned int> manualPicking(GarbageCentral& gc){
 	vector<unsigned int> deposits_id;
@@ -243,7 +257,7 @@ vector<unsigned int> manualPicking(GarbageCentral& gc){
 		if (op == 0)
 			stop = true;
 		else if (find(deposits_id.begin(), deposits_id.end(), op) != deposits_id.end()){
-			cout << "Deposit ID already inserted, insert another (0 to stop inserting)";
+			cout << "Deposit ID already inserted, choose another.";
 			clearline(x, y);
 			valid = false;
 		}
@@ -258,10 +272,12 @@ vector<unsigned int> manualPicking(GarbageCentral& gc){
 			valid = false;
 		}
 
-	}while(!stop);
+	} while(!stop);
 
 	return deposits_id;
 }
+
+
 
 void createPickRoute(GarbageCentral& gc){
 
@@ -288,7 +304,7 @@ void createPickRoute(GarbageCentral& gc){
 			cout << "Invalid truck ID, insert again";
 			clearline(x, y);
 		}
-	}while (!valid);
+	} while (!valid);
 
 	int op = 0;
 
@@ -312,8 +328,6 @@ void createPickRoute(GarbageCentral& gc){
 			data = gc.createPickingRoute(t);
 		}catch (RouteMissingData& e) {
 			cout << "Truck doesn't have enough capacity" << endl;
-		} catch (Unreachable& e){
-			cout << "The path is not reachable" << endl;
 		}
 		break;
 	case 2:
@@ -321,9 +335,7 @@ void createPickRoute(GarbageCentral& gc){
 		try{
 			data = gc.createPickingRoute(t, deposits_id);
 		}catch (RouteMissingData& e) {
-			cout << "Truck doesn't have enough capacity" << endl;
-		} catch (Unreachable& e){
-			cout << "The path is not reachable" << endl;
+			cout << "Truck doesn't have enough capacity or info is missing" << endl;
 		}
 		break;
 	case 0:
@@ -345,4 +357,160 @@ void createPickRoute(GarbageCentral& gc){
 		}
 		cout << info[DESTINATION]->print() << endl;
 	}
+}
+
+
+
+
+void updateCapacityOccupied(GarbageCentral& gc) {
+
+	cout << "Deposits: " << endl << endl;
+	gc.listDeposits();
+	cout << " -----------------------------" << endl;
+
+	int x, y;
+	int depID;
+	int quantity;
+	bool valid = false;
+
+	cout << "Insert an ID (0 to go back): ";
+	getCursorXY(x,y);
+
+
+	do {
+		getEntry(depID);
+
+		if (depID == 0)
+			return;
+		else if (gc.hasDeposit(depID))
+			valid = true;
+		else
+		{
+			cout << "Invalid deposit ID, insert again";
+			clearline(x, y);
+		}
+	} while (!valid);
+
+	clearline();
+
+	cout << endl << "Insert new level of occupation: ";
+	getCursorXY(x,y);
+	valid = false;
+	do {
+		getEntry(quantity);
+
+		if (quantity >= 0)
+			valid = true;
+		else
+		{
+			cout << "Invalid quantity, insert again";
+			clearline(x, y);
+		}
+	} while (!valid);
+
+
+	gc.updateDepositOccupied(depID, quantity);
+}
+
+
+
+
+void updateAvgSpeedRoad(GarbageCentral& gc) {
+
+	cout << "Roads: " << endl << endl;
+	gc.listRoads();
+	cout << " -----------------------------" << endl;
+
+	int x, y;
+	int roadID;
+	int avg_speed;
+	bool valid = false;
+
+	cout << "Insert an ID (0 to go back): ";
+	getCursorXY(x,y);
+
+
+	do {
+		getEntry(roadID);
+
+		if (roadID == 0)
+			return;
+		else if (gc.hasRoad(roadID))
+			valid = true;
+		else
+		{
+			cout << "Invalid road ID, insert again";
+			clearline(x, y);
+		}
+	} while (!valid);
+
+
+	clearline();
+
+	cout << endl << "Insert current average speed: ";
+	getCursorXY(x,y);
+
+	valid = false;
+	do {
+		getEntry(avg_speed);
+
+		if (avg_speed >= 0)
+			valid = true;
+		else
+		{
+			cout << "Invalid quantity, insert again";
+			clearline(x, y);
+		}
+	} while (!valid);
+
+
+	gc.updateRoadAvgSpeed(roadID, avg_speed);
+}
+
+
+
+void updateAvailableRoad(GarbageCentral& gc) {
+
+	cout << "Roads: " << endl << endl;
+	gc.listRoads();
+	cout << " -----------------------------" << endl;
+
+	int x, y;
+	int roadID;
+	int availability;
+
+	bool valid = false;
+
+	cout << "Insert an ID (0 to go back): ";
+	getCursorXY(x,y);
+
+
+	do {
+		getEntry(roadID);
+
+		if (roadID == 0)
+			return;
+		else if (gc.hasRoad(roadID))
+			valid = true;
+		else
+		{
+			cout << "Invalid road ID, insert again";
+			clearline(x, y);
+		}
+
+	} while (!valid);
+
+	clearline();
+
+	cout << endl;
+	cout << "1 - Available" << endl;
+	cout << "2 - Unavailable" << endl;
+
+	getCursorXY(x,y);
+	getEntry(availability, 1, 2);
+
+	if (availability == 1)
+		gc.updateRoadAvailable(roadID, true);
+	else
+		gc.updateRoadAvailable(roadID, false);
 }
