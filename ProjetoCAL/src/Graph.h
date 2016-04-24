@@ -725,6 +725,8 @@ void Graph<T,V>::myDijkstraShortestPath(const T &s) {
 	while (! fh.empty()) {
 
 		v = fh.top(); fh.pop();
+		v->visited = false;
+
 		for(unsigned int i = 0; i < v->adj.size(); i++) {
 			Vertex<T,V> *w = v->adj[i].dest;
 			if (v->dist + v->adj[i].getWeight() < w->dist) {
@@ -766,6 +768,8 @@ bool Graph<T,V>::myDijkstraShortestPath(const T &s, const T &d) {
 	while (!fh.empty() && vertex_count < destIndegree) {
 
 		v = fh.top(); fh.pop();
+		v->visited = false;
+
 		for(unsigned int i = 0; i < v->adj.size(); i++) {
 			Vertex<T,V> *w = v->adj[i].dest;
 

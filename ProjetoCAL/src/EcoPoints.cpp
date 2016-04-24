@@ -16,9 +16,10 @@ int main() {
 //	Reader r;
 //	r.readFiles();
 // 	GarbageCentral GC(r);
+//	mainMenu(GC);
 
 	GarbageCentral GC = GarbageCentral();
+	GC.test();
 
-	mainMenu(GC);
 	return 0;
 }

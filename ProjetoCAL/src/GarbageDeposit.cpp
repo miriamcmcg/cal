@@ -3,13 +3,19 @@
 
 
 GarbageDeposit::GarbageDeposit(unsigned long ID, unsigned int maxCapacity, unsigned capacityOccupied) {
+
+	if (capacityOccupied > maxCapacity)
+		throw InvalidEntry();
+
 	this->ID = ID;
 	this->maxCapacity = maxCapacity;
 
 	if (capacityOccupied != 0)
 		this->capacityOccupied = capacityOccupied;
+	else if (maxCapacity != 0)
+		this->capacityOccupied = (rand() % maxCapacity);
 	else
-		this->capacityOccupied = (rand() % 3000) + 100;
+		this->capacityOccupied = 0;
 };
 
 bool GarbageDeposit::operator==(const GarbageDeposit &gd) const {

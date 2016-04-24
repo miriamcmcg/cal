@@ -134,16 +134,15 @@ struct hash<Relationship> {
 class Reader {
 
 private:
-	unordered_set<Node> nodes = {};
-	unordered_set<Link> links = {};
-	unordered_set<Relationship> relations = {};
+	unordered_set<Node> nodes;
+	unordered_set<Link> links;
+	unordered_set<Relationship> relations;
 
 	void loadNodes();
 	void loadLinks();
 	void loadRelations();
 public:
 	void readFiles();
-	void printInfo();
 
 	friend class GarbageCentral;
 };

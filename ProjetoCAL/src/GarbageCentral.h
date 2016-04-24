@@ -58,6 +58,10 @@ public:
 	bool hasDeposit(unsigned int id) const;
 	void listRoads() const;
 	bool hasRoad(unsigned int id) const;
+
+
+	/* PARA EFEITOS DE TESTE */
+	void test();
 };
 
 

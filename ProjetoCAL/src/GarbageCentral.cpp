@@ -121,29 +121,38 @@ void GarbageCentral::sortDeposits(){
 GarbageCentral::GarbageCentral() {
 
 	treat_plant = new TreatmentPlant(0, "GarbageCentral");
-	deposits.push_back(new GarbageDeposit(1, 1000, 9000));
-	deposits.push_back(new GarbageDeposit(2, 1000, 100));
-	deposits.push_back(new GarbageDeposit(3, 1000, 9000));
-	deposits.push_back(new GarbageDeposit(4, 1000, 100));
+	deposits.push_back(new GarbageDeposit(1, 9000, 500));
+	deposits.push_back(new GarbageDeposit(2, 7000, 1000));
+	deposits.push_back(new GarbageDeposit(3, 15000, 9000));
+	deposits.push_back(new GarbageDeposit(4, 5600, 100));
+	deposits.push_back(new GarbageDeposit(5, 2000, 80));
+	deposits.push_back(new GarbageDeposit(6, 7000, 400));
+
+	//sortDeposits();
 
 	graph.addVertex(GDPointer(treat_plant));
 	for (unsigned i = 0; i < deposits.size(); i++)
 		graph.addVertex(GDPointer(deposits[i]));
 
-	roads.push_back(new Road(0, "starting road", 10, 20));
-	roads.push_back(new Road(1, "rua 1", 7, 50));
-	roads.push_back(new Road(2, "rua 2", 8, 54));
-	roads.push_back(new Road(3, "rua 3", 10, 70));
-	roads.push_back(new Road(4, "rua 4", 2, 30));
-	roads.push_back(new Road(5, "rua 5", 5, 40));
+	roads.push_back(new Road(0, "road 0 (0->1)", 10, 50));
+	roads.push_back(new Road(1, "road 1 (0->2)", 5, 50));
+	roads.push_back(new Road(2, "road 2 (1->2)", 3, 20));
+	roads.push_back(new Road(3, "road 3 (1->3)", 8, 80));
+	roads.push_back(new Road(4, "road 4 (2->3)", 3, 50));
+	roads.push_back(new Road(5, "road 5 (3->5)", 2, 40));
+	roads.push_back(new Road(6, "road 6 (2->6)", 8, 20));
+	roads.push_back(new Road(7, "road 7 (5->1)", 8, 80));
+	roads.push_back(new Road(8, "road 8 (5->6)", 8, 80));
 
 	graph.addEdge(GDPointer(treat_plant), GDPointer(deposits[0]), RoadPointer(roads[0]));
-	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[1]), RoadPointer(roads[1]));
-	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[2]), RoadPointer(roads[2]));
+	graph.addEdge(GDPointer(treat_plant), GDPointer(deposits[1]), RoadPointer(roads[1]));
+	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[1]), RoadPointer(roads[2]));
 	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[2]), RoadPointer(roads[3]));
-	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[3]), RoadPointer(roads[4]));
-	graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[3]), RoadPointer(roads[5]));
-
+	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[2]), RoadPointer(roads[4]));
+	graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[4]), RoadPointer(roads[5]));
+	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[5]), RoadPointer(roads[6]));
+	graph.addEdge(GDPointer(deposits[5]), GDPointer(deposits[0]), RoadPointer(roads[7]));
+	graph.addEdge(GDPointer(deposits[4]), GDPointer(deposits[5]), RoadPointer(roads[8]));
 
 
 	ifstream in("trucks.txt");
@@ -373,7 +382,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " -----------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																																<< " |" << setw(10) << trucks[i].getCapacity()<< " |" <<  endl;
+																																				<< " |" << setw(10) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -389,8 +398,8 @@ void GarbageCentral::listDeposits() const {
 	cout << " -----------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																																<< deposits[i]->getCapacityOccupied() << " |"
-																																<< deposits[i]->getMaxCapacity() << " |" << endl;
+																																				<< deposits[i]->getCapacityOccupied() << " |"
+																																				<< deposits[i]->getMaxCapacity() << " |" << endl;
 	}
 }
 
@@ -413,4 +422,43 @@ void GarbageCentral::listRoads() const {
 
 bool GarbageCentral::hasRoad(unsigned int id) const {
 	return (roadPosition(id) != -1);
+}
+
+
+
+
+
+
+
+
+void GarbageCentral::test() {
+
+	/***** TESTE 1 ****/
+	cout << "Processing deposits 1, 2 and 3\n";
+	cout << "Expected deposit order: 1 -> 2 -> 3\n";
+	cout << "Expected: road 0, road 2, road 4\n";
+
+	vector<GarbageDeposit*> to_pick;
+	to_pick.push_back(treat_plant);
+	to_pick.push_back(deposits[0]);
+	to_pick.push_back(deposits[1]);
+	to_pick.push_back(deposits[2]);
+
+	Data data = getRoute(to_pick);
+
+	auto route = data.first;
+	for (unsigned i = 0; i < route.size(); i++) {
+		auto info = route[i].first;
+		auto roads = route[i].second;
+
+		cout << info[SOURCE]->print() << "  --->  ";
+		for (unsigned j = 0; j < roads.size(); j++) {
+			cout << roads[j]->print() << "  --->  ";
+		}
+		cout << info[DESTINATION]->print() << endl;
+	}
+	/******************/
+
+
+
 }

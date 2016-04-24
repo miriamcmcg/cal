@@ -21,5 +21,7 @@ class RoadNonExistent {};
 
 class TruckNonExistent {};
 
+class InvalidEntry {};
+
 
 #endif /* SRC_EXCEPTIONS_H_ */
