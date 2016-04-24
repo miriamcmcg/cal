@@ -35,6 +35,8 @@ public:
 	void setAvgSpeed(double speed);
 	void setAvailable(bool av);
 	virtual string print() const;
+	double getDistance() const;
+	double getAvgSpeed() const;
 };
 
 

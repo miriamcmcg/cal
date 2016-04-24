@@ -51,3 +51,11 @@ void Road::setAvailable(bool av) {
 string Road::print() const {
 	return name;
 }
+
+double Road::getDistance() const{
+	return distance;
+}
+
+double Road::getAvgSpeed() const{
+	return avg_speed;
+}

@@ -19,7 +19,8 @@ int main() {
 //	mainMenu(GC);
 
 	GarbageCentral GC = GarbageCentral();
-	GC.test();
+	//GC.test();
+	mainMenu(GC);
 
 	return 0;
 }

@@ -58,6 +58,7 @@ public:
 	bool hasDeposit(unsigned int id) const;
 	void listRoads() const;
 	bool hasRoad(unsigned int id) const;
+	bool truckCanPick(unsigned int truck_id, unsigned int container_id);
 
 
 	/* PARA EFEITOS DE TESTE */

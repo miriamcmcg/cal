@@ -12,7 +12,7 @@
 
 Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 
-	if (to_pick.size() <= 0)
+	if (to_pick.size() <= 1)
 		throw RouteMissingData();
 
 	vector< GarbageDeposit* > missing_deposits;
@@ -339,9 +339,8 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned in
 	vector<GarbageDeposit*> to_pick = { treat_plant };
 	for (unsigned i = 0; i < deposits_id.size(); i++) {
 		int pos = depositPosition(deposits_id[i]);
-		if ( truck.addCarrying(deposits[pos]->getCapacityOccupied()) ) {
-			to_pick.push_back(deposits[pos]);
-		}
+		to_pick.push_back(deposits[pos]);
+
 	}
 
 	Data data;
@@ -378,11 +377,11 @@ void GarbageCentral::updateDepositOccupied(unsigned int depositID, unsigned int 
 
 
 void GarbageCentral::listTrucks() const {
-	cout << " " << setw(4) << "ID" << " |" <<  setw(10) << "Max Capacity" << " |" << endl;
-	cout << " -----------------" << endl;
+	cout << " " << setw(4) << "ID" << " |" <<  setw(13) << "Max Capacity" << " |" << endl;
+	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																																				<< " |" << setw(10) << trucks[i].getCapacity()<< " |" <<  endl;
+			 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -393,13 +392,13 @@ bool GarbageCentral::hasTruck(unsigned int id) const {
 
 
 void GarbageCentral::listDeposits() const {
-	cout << " " << setw(15) << "ID" << " |" <<  setw(15) << "Capacity Occupied" <<
-			" |" << setw(10) << "Max Capacity" << " |" << endl;
-	cout << " -----------------------------" << endl;
+	cout << " " << setw(15) << "ID" << " |" <<  setw(18) << "Capacity Occupied" <<
+			" |" << setw(13) << "Max Capacity" << " |" << endl;
+	cout << " ----------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
-		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																																				<< deposits[i]->getCapacityOccupied() << " |"
-																																				<< deposits[i]->getMaxCapacity() << " |" << endl;
+		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(18)
+			 << deposits[i]->getCapacityOccupied() << " |" << setw(13)
+			 << deposits[i]->getMaxCapacity() << " |" << endl;
 	}
 }
 
@@ -410,11 +409,13 @@ bool GarbageCentral::hasDeposit(unsigned int id) const {
 
 
 void GarbageCentral::listRoads() const {
-	cout << " " << setw(15) << "ID" << " |" <<  setw(25) << "Name" << " |" << endl;
-	cout << " --------------------------------------------" << endl;
+	cout << " " << setw(15) << "ID" << " |" <<  setw(25) << "Name" << " |" << setw(9) << "Distance" << " |" << setw(14) <<"Average Speed" << " |"<< endl;
+	cout << " -----------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < roads.size(); i++){
 		cout << " " << setw(15) << roads[i]->getID() << " |"
-				<< setw(25) << roads[i]->getName() << " |\n";
+				<< setw(25) << roads[i]->getName() << " |"
+				<< setw(9) << roads[i]->getDistance() << " |"
+				<< setw(14) << roads[i]->getAvgSpeed() << " |\n";
 	}
 }
 
@@ -424,10 +425,14 @@ bool GarbageCentral::hasRoad(unsigned int id) const {
 	return (roadPosition(id) != -1);
 }
 
-
-
-
-
+bool GarbageCentral::truckCanPick(unsigned int truck_id, unsigned int container_id){
+	int t_pos = truckPosition(truck_id);
+	int c_pos = depositPosition(container_id);
+	if(!trucks[t_pos].addCarrying(deposits[c_pos]->getCapacityOccupied())){
+		return false;
+	}
+	return true;
+}
 
 
 
@@ -438,15 +443,24 @@ void GarbageCentral::test() {
 	cout << "Expected deposit order: 1 -> 2 -> 3\n";
 	cout << "Expected: road 0, road 2, road 4\n";
 
+	//	vector<GarbageDeposit*> to_pick;
+	//	to_pick.push_back(treat_plant);
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[2]);
+	updateRoadAvailable(0, false);
+	updateRoadAvailable(7, false);
+
 	vector<GarbageDeposit*> to_pick;
 	to_pick.push_back(treat_plant);
-	to_pick.push_back(deposits[0]);
 	to_pick.push_back(deposits[1]);
-	to_pick.push_back(deposits[2]);
+	to_pick.push_back(deposits[5]);
+	to_pick.push_back(deposits[0]);
 
 	Data data = getRoute(to_pick);
 
 	auto route = data.first;
+	auto failed = data.second;
 	for (unsigned i = 0; i < route.size(); i++) {
 		auto info = route[i].first;
 		auto roads = route[i].second;
@@ -457,8 +471,18 @@ void GarbageCentral::test() {
 		}
 		cout << info[DESTINATION]->print() << endl;
 	}
+
+	if(failed.size() != 0)
+	{
+		cout << "No optimal route found, these containers could not be picked:" << endl;
+		for(unsigned int i = 0; i < failed.size(); i++){
+			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
+		}
+	}
 	/******************/
 
 
 
 }
+
+

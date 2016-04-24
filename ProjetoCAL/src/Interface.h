@@ -25,7 +25,7 @@ void clearline();
 void clearline(int x, int y);
 void waitReturn();
 
-vector<unsigned int> manualPicking(GarbageCentral& gc);
+vector<unsigned int> manualPicking(GarbageCentral& gc, unsigned int truck_id);
 void getEntry(unsigned int &entrada);
 void getEntry(int &entrada);
 void getEntry(int &entrada, int start, int end);

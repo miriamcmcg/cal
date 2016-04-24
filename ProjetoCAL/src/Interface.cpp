@@ -226,7 +226,7 @@ void mainMenu(GarbageCentral& gc){
 
 
 
-vector<unsigned int> manualPicking(GarbageCentral& gc){
+vector<unsigned int> manualPicking(GarbageCentral& gc, unsigned int truck_id){
 	vector<unsigned int> deposits_id;
 	bool valid = true;
 	bool stop = false;
@@ -249,7 +249,7 @@ vector<unsigned int> manualPicking(GarbageCentral& gc){
 		int x, y;
 		getCursorXY(x,y);
 
-		cout << "Insert an ID - by level of emergency (0 to stop inserting): ";
+		cout << "Insert an ID (0 to stop inserting): ";
 
 
 		getEntry(op);
@@ -262,9 +262,16 @@ vector<unsigned int> manualPicking(GarbageCentral& gc){
 			valid = false;
 		}
 		else if (gc.hasDeposit(op)){
-			deposits_id.push_back(op);
-			ClearScreen();
-			valid = true;
+			if (gc.truckCanPick(truck_id, op)){
+				deposits_id.push_back(op);
+				ClearScreen();
+				valid = true;
+			}
+			else{
+				cout << "Truck has no capacity, choose another.";
+				clearline(x, y);
+				valid = false;
+			}
 		}
 		else {
 			cout << "Invalid Deposit ID, insert again (0 to stop inserting)";
@@ -331,7 +338,7 @@ void createPickRoute(GarbageCentral& gc){
 		}
 		break;
 	case 2:
-		deposits_id = manualPicking(gc);
+		deposits_id = manualPicking(gc, t);
 		try{
 			data = gc.createPickingRoute(t, deposits_id);
 		}catch (RouteMissingData& e) {
@@ -355,7 +362,15 @@ void createPickRoute(GarbageCentral& gc){
 		for (unsigned j = 0; j < roads.size(); j++) {
 			cout << roads[j]->print() << "  --->  ";
 		}
-		cout << info[DESTINATION]->print() << endl;
+		cout << info[DESTINATION]->print() << endl << endl;
+	}
+
+	if(failed.size() != 0)
+	{
+		cout << "No optimal route found, these containers could not be picked:" << endl;
+		for(unsigned int i = 0; i < failed.size(); i++){
+			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
+		}
 	}
 }
 
