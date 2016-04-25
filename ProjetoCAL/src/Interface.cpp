@@ -1,5 +1,6 @@
 #include "Interface.h"
 
+
 void ClearScreen()
 {
 	HANDLE                     hStdOut;
@@ -363,7 +364,7 @@ void createPickRoute(GarbageCentral& gc){
 
 		cout << info[SOURCE]->print() << "  --->  ";
 		for (unsigned j = 0; j < roads.size(); j++) {
-			cout << roads[j]->print() << "  --->  ";
+			cout << roads[j]->print() << "  --->  " ;
 		}
 		cout << info[DESTINATION]->print() << endl << endl;
 	}
@@ -375,6 +376,7 @@ void createPickRoute(GarbageCentral& gc){
 			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
 		}
 	}
+	displayGraphViewer(route);
 }
 
 
@@ -531,4 +533,37 @@ void updateAvailableRoad(GarbageCentral& gc) {
 		gc.updateRoadAvailable(roadID, true);
 	else
 		gc.updateRoadAvailable(roadID, false);
+}
+
+void displayGraphViewer(vector<Section> route)
+{
+	GraphViewer *gv = new GraphViewer(600, 600, false);
+	//gv->setBackground("map.png");
+
+	gv->createWindow(600, 600);
+
+	gv->defineEdgeDashed(false);
+	gv->defineEdgeColor("black");
+	gv->defineVertexColor("blue");
+	unsigned roadCounter = 0;
+
+	for(auto section: route)
+	{
+		auto info = section.first;
+		auto road = section.second;
+		gv->addNode(info[0]->getID(),0,0);
+		gv->setVertexLabel(info[0]->getID(),info[0]->print());
+
+		for(unsigned i =1; i < info.size(); i++)
+		{
+			gv->addNode(info[i]->getID(),(info[i]->getX()-4740)*100,(info[i]->getY()-4140)*100);
+			gv->setVertexLabel(info[i]->getID(),info[i]->print());
+			gv->addEdge(roadCounter,info[i-1]->getID(), info[i]->getID(), EdgeType::DIRECTED);
+			gv->setEdgeLabel(roadCounter,road[i-1]->getName());
+			roadCounter++;
+		}
+	}
+
+	gv->rearrange();
+	Sleep(2000);
 }

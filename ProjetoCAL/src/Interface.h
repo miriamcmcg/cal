@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <cstdio>
 #include <windows.h>
-
+#include "graphviewer.h"
 #include "GarbageCentral.h"
 
 
@@ -34,6 +34,6 @@ void createPickRoute(GarbageCentral& gc);
 void updateCapacityOccupied(GarbageCentral& gc);
 void updateAvgSpeedRoad(GarbageCentral& gc);
 void updateAvailableRoad(GarbageCentral& gc);
-
+void displayGraphViewer(vector<Section> route);
 
 #endif /* SRC_INTERFACE_H_ */

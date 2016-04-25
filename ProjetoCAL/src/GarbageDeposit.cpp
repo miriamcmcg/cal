@@ -38,6 +38,17 @@ void GarbageDeposit::setCapacityOccupied(unsigned int capacityOccupied) {
 	this->capacityOccupied = capacityOccupied;
 }
 
+double GarbageDeposit::getX() const{
+	return this->x;
+}
+
+double GarbageDeposit::getY() const{
+	return this->y;
+}
+
+double GarbageDeposit::getZ() const{
+	return this->z;
+}
 unsigned long  GarbageDeposit::getID() const {
 	return ID;
 }

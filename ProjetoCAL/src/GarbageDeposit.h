@@ -29,6 +29,9 @@ public:
 	bool operator!=(const GarbageDeposit &gd) const;
 	unsigned int getCapacityOccupied() const;
 	void setCapacityOccupied(unsigned int capacityOccupied);
+	double getX() const;
+	double getY() const;
+	double getZ() const;
 	unsigned long getID() const;
 	unsigned int getMaxCapacity() const;
 	void empty();
