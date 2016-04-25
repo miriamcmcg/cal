@@ -41,7 +41,7 @@ private:
 	int roadPosition(unsigned int id) const;
 	int truckPosition(unsigned int id) const;
 	void sortDeposits();
-	Path getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
+	Section getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
 public:
 	GarbageCentral();
 	GarbageCentral(const Reader& r);
@@ -58,8 +58,8 @@ public:
 	void listRoads() const;
 	bool hasRoad(unsigned int id) const;
 	bool truckCanPick(unsigned int truck_id, unsigned int container_id);
-	Path filter(const Path &p);
-	Path convert(const GraphInfo &p);
+	Section filter(const Section &p);
+	Section convert(const GraphInfo &p);
 
 	/* PARA EFEITOS DE TESTE */
 	void test();

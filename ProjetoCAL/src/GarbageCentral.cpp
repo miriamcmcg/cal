@@ -37,7 +37,7 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 		if ( (gd2_it = find(begin(to_pick), end(to_pick), map_it->getPointer())) != end(to_pick)) {
 
 			try {
-				Path section = getShortestPath(*gd1_it, *gd2_it);
+				Section section = getShortestPath(*gd1_it, *gd2_it);
 				route.push_back(section);
 				*gd1_it = *gd2_it;
 			} catch (NoOptimalPath &e) {
@@ -56,7 +56,7 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 
 
 
-Path GarbageCentral::filter(const Path &p) {
+Section GarbageCentral::filter(const Section &p) {
 
 	vector<GarbageDeposit*> gds = p.first;
 	vector<GarbageDeposit*> gds_filtered = { gds[0], gds[gds.size() - 1] };
@@ -75,7 +75,7 @@ Path GarbageCentral::filter(const Path &p) {
 
 
 
-Path GarbageCentral::convert(const GraphInfo &p) {
+Section GarbageCentral::convert(const GraphInfo &p) {
 
 	vector<GDPointer> gds_ptr = p.first;
 	vector<GarbageDeposit*> gds;
@@ -297,7 +297,7 @@ GarbageCentral::~GarbageCentral() {
 
 
 
-Path GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2) {
+Section GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2) {
 
 	auto gd1_ptr = GDPointer(gd1);
 	auto gd2_ptr = GDPointer(gd2);
@@ -347,7 +347,8 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 	truck.empty();
 	vector<GarbageDeposit*> to_pick = { treat_plant };
 	for (unsigned i = 0; i < deposits.size(); i++) {
-		if ( truck.addCarrying(deposits[i]->getCapacityOccupied()) ) {
+		unsigned int capOcup = deposits[i]->getCapacityOccupied();
+		if ( capOcup != 0 && truck.addCarrying(capOcup) ) {
 			to_pick.push_back(deposits[i]);
 		}
 	}
@@ -364,12 +365,15 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 
 	trucks[pos].empty();
 	auto route = data.first;
-	route[0].first[SOURCE]->empty();
-	for (auto section : route) {
-		section.first[DESTINATION]->empty();
-	}
 
-	sortDeposits();
+	if (route.size() != 0) {
+		route[0].first[0]->empty();
+		for (auto section : route) {
+			section.first[section.first.size() - 1]->empty();
+		}
+
+		sortDeposits();
+	}
 
 	return data;
 }
@@ -403,9 +407,9 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned in
 	auto route = data.first;
 
 	if (route.size() != 0) {
-		route[0].first[SOURCE]->empty();
+		route[0].first[0]->empty();
 		for (auto section : route) {
-			section.first[DESTINATION]->empty();
+			section.first[section.first.size() - 1]->empty();
 		}
 
 		sortDeposits();
@@ -434,7 +438,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																											 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+																																							 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -450,9 +454,9 @@ void GarbageCentral::listDeposits() const {
 	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																		<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
-																		<< deposits[i]->getMaxCapacity() << " |" << setw(27)
-																		<< deposits[i]->coordsString() << " |" << endl;
+																														<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																														<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																														<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
