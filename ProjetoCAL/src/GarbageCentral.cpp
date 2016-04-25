@@ -15,14 +15,13 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 	if (to_pick.size() <= 1)
 		throw RouteMissingData();
 
-	vector< GarbageDeposit* > missing_deposits;
-
 	auto map = graph.dfs();
 	auto map_it = begin(map);
 
 	unsigned pickedCounter = 0;
 
 	Route route;
+	vector<GarbageDeposit*> missing_deposits;
 	vector<GarbageDeposit*>::iterator gd1_it;
 	vector<GarbageDeposit*>::iterator gd2_it;
 
@@ -38,7 +37,7 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 		if ( (gd2_it = find(begin(to_pick), end(to_pick), map_it->getPointer())) != end(to_pick)) {
 
 			try {
-				FilteredPath section = getShortestPath(*gd1_it, *gd2_it);
+				Path section = getShortestPath(*gd1_it, *gd2_it);
 				route.push_back(section);
 				*gd1_it = *gd2_it;
 			} catch (NoOptimalPath &e) {
@@ -57,23 +56,42 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 
 
 
-FilteredPath GarbageCentral::filter(const GraphInfo &p) {
+Path GarbageCentral::filter(const Path &p) {
 
-	vector<GDPointer> gds = p.first;
-	vector<GarbageDeposit*> gds_filtered = { gds[0].getPointer(), gds[gds.size() - 1].getPointer() };
+	vector<GarbageDeposit*> gds = p.first;
+	vector<GarbageDeposit*> gds_filtered = { gds[0], gds[gds.size() - 1] };
 
-	vector<RoadPointer> roads = p.second;
+	vector<Road*> roads = p.second;
 	vector<Road*> roads_filtered;
 
-	roads_filtered.push_back(roads[0].getPointer());
+	roads_filtered.push_back(roads[0]);
 	for (unsigned i = 1; i < roads.size(); i++) {
-		if (roads[i].getPointer()->getName() != roads_filtered[roads_filtered.size() - 1]->getName())
-			roads_filtered.push_back(roads[i].getPointer());
+		if (roads[i]->getName() != roads_filtered[roads_filtered.size() - 1]->getName())
+			roads_filtered.push_back(roads[i]);
 	}
 
 	return make_pair(gds_filtered, roads_filtered);
 }
 
+
+
+Path GarbageCentral::convert(const GraphInfo &p) {
+
+	vector<GDPointer> gds_ptr = p.first;
+	vector<GarbageDeposit*> gds;
+
+	vector<RoadPointer> roads_ptr = p.second;
+	vector<Road*> roads;
+
+
+	for (unsigned i = 0; i < gds_ptr.size(); i++)
+		gds.push_back(gds_ptr[i].getPointer());
+
+	for (unsigned i = 0; i < roads_ptr.size(); i++)
+		roads.push_back(roads_ptr[i].getPointer());
+
+	return make_pair(gds, roads);
+}
 
 
 
@@ -120,15 +138,14 @@ void GarbageCentral::sortDeposits(){
 
 GarbageCentral::GarbageCentral() {
 
-	treat_plant = new TreatmentPlant(0, "GarbageCentral");
-	deposits.push_back(new GarbageDeposit(1, 9000, 500));
-	deposits.push_back(new GarbageDeposit(2, 7000, 1000));
-	deposits.push_back(new GarbageDeposit(3, 15000, 9000));
-	deposits.push_back(new GarbageDeposit(4, 5600, 100));
-	deposits.push_back(new GarbageDeposit(5, 2000, 80));
-	deposits.push_back(new GarbageDeposit(6, 7000, 400));
+	treat_plant = new TreatmentPlant(0, "GarbageCentral", 0, 0, 0);
+	deposits.push_back(new GarbageDeposit(1, 0, 0, 0, 9000, 500));
+	deposits.push_back(new GarbageDeposit(2, 0, 0, 0, 7000, 1000));
+	deposits.push_back(new GarbageDeposit(3, 0, 0, 0, 15000, 9000));
+	deposits.push_back(new GarbageDeposit(4, 0, 0, 0, 5600, 100));
+	deposits.push_back(new GarbageDeposit(5, 0, 0, 0, 2000, 80));
+	deposits.push_back(new GarbageDeposit(6, 0, 0, 0, 7000, 400));
 
-	//sortDeposits();
 
 	graph.addVertex(GDPointer(treat_plant));
 	for (unsigned i = 0; i < deposits.size(); i++)
@@ -168,52 +185,81 @@ GarbageCentral::GarbageCentral() {
 
 GarbageCentral::GarbageCentral(const Reader& r) {
 
-	for (auto it = begin(r.relations); it != end(r.relations); it++) {
+	auto it = begin(r.relations);
+	auto it_road = r.links.find(Link(it->road_id));
+	auto it_node1 = r.nodes.find(Node(it->node1_id));
+	auto it_node2 = r.nodes.find(Node(it->node2_id));
 
-		auto it_road = r.links.find(Link(it->road_id));
-		auto it_node1 = r.nodes.find(Node(it->node1_id));
-		auto it_node2 = r.nodes.find(Node(it->node2_id));
+	treat_plant = new TreatmentPlant(it_node1->node_id, "Central", it_node1->x, it_node1->y, it_node1->z);
+	GDPointer gd1 = GDPointer(treat_plant);
+	graph.addVertex(gd1);
+
+	deposits.push_back(new GarbageDeposit(it_node2->node_id, it_node2->x, it_node2->y, it_node2->z));
+	GDPointer gd2 = GDPointer(deposits[0]);
+	graph.addVertex(gd2);
+
+	double distance = it_node1->distanceFrom(*it_node2);
+	roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
+	RoadPointer road_ptr = RoadPointer(roads[0]);
+
+	if (it_road->two_way)
+	{
+		graph.addEdge(gd1, gd2, road_ptr);
+		graph.addEdge(gd2, gd1, road_ptr);
+	}
+	else
+		graph.addEdge(gd1, gd2, road_ptr);
+
+
+	it++;
+	for (; it != end(r.relations); it++) {
+
+		it_road = r.links.find(Link(it->road_id));
+		it_node1 = r.nodes.find(Node(it->node1_id));
+		it_node2 = r.nodes.find(Node(it->node2_id));
 
 		int pos;
 		pos = depositPosition(it_node1->node_id);
-
 		if (pos == -1) {
-			deposits.push_back(new GarbageDeposit(it_node1->node_id));
+			deposits.push_back(new GarbageDeposit(it_node1->node_id,
+					it_node1->x, it_node1->y, it_node1->z));
+
 			pos = deposits.size() - 1;
 		}
 
-		GDPointer gd1 = GDPointer(deposits[pos]);
+
+		gd1 = GDPointer(deposits[pos]);
 		graph.addVertex(gd1);
 
 		pos = depositPosition(it_node2->node_id);
-
 		if (pos == -1) {
-			deposits.push_back(new GarbageDeposit(it_node2->node_id));
+			deposits.push_back(new GarbageDeposit(it_node2->node_id,
+					it_node2->x, it_node2->y, it_node2->z));
 			pos = deposits.size() - 1;
 		}
 
-		GDPointer gd2 = GDPointer(deposits[pos]);
+
+		gd2 = GDPointer(deposits[pos]);
 		graph.addVertex(gd2);
 
 
 		double distance = it_node1->distanceFrom(*it_node2);
 
 		pos = roadPosition(it_road->link_id);
-
 		if(pos == -1){
 			roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
 			pos = roads.size() - 1;
 		}
 
-		RoadPointer r = RoadPointer(roads[pos]);
+		road_ptr = RoadPointer(roads[pos]);
 
 		if (it_road->two_way)
 		{
-			graph.addEdge(gd1, gd2, r);
-			graph.addEdge(gd2, gd1, r);
+			graph.addEdge(gd1, gd2, road_ptr);
+			graph.addEdge(gd2, gd1, road_ptr);
 		}
 		else
-			graph.addEdge(gd1, gd2, r);
+			graph.addEdge(gd1, gd2, road_ptr);
 	}
 
 	sortDeposits();
@@ -251,7 +297,7 @@ GarbageCentral::~GarbageCentral() {
 
 
 
-FilteredPath GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2) {
+Path GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2) {
 
 	auto gd1_ptr = GDPointer(gd1);
 	auto gd2_ptr = GDPointer(gd2);
@@ -260,7 +306,7 @@ FilteredPath GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit
 		throw NoOptimalPath();
 
 	auto res = graph.getPath(gd1_ptr, gd2_ptr);
-	auto info = filter(res);
+	auto info = convert(res);
 
 	return info;
 }
@@ -323,6 +369,8 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 		section.first[DESTINATION]->empty();
 	}
 
+	sortDeposits();
+
 	return data;
 }
 
@@ -353,9 +401,14 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned in
 
 	trucks[pos].empty();
 	auto route = data.first;
-	route[0].first[SOURCE]->empty();
-	for (auto section : route) {
-		section.first[DESTINATION]->empty();
+
+	if (route.size() != 0) {
+		route[0].first[SOURCE]->empty();
+		for (auto section : route) {
+			section.first[DESTINATION]->empty();
+		}
+
+		sortDeposits();
 	}
 
 	return data;
@@ -381,7 +434,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-			 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+																											 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -392,13 +445,14 @@ bool GarbageCentral::hasTruck(unsigned int id) const {
 
 
 void GarbageCentral::listDeposits() const {
-	cout << " " << setw(15) << "ID" << " |" <<  setw(18) << "Capacity Occupied" <<
-			" |" << setw(13) << "Max Capacity" << " |" << endl;
-	cout << " ----------------------------------------------------" << endl;
+	cout << " " << setw(15) << "ID" << " |" <<  setw(15) << "Cap. Occupied" <<
+			" |" << setw(13) << "Max Capacity" << " |" << setw(27)  << "Coordinates" << " |" << endl;
+	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
-		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(18)
-			 << deposits[i]->getCapacityOccupied() << " |" << setw(13)
-			 << deposits[i]->getMaxCapacity() << " |" << endl;
+		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
+																		<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																		<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																		<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
@@ -472,7 +526,7 @@ void GarbageCentral::test() {
 		cout << info[DESTINATION]->print() << endl;
 	}
 
-	if(failed.size() != 0)
+	if (failed.size() != 0)
 	{
 		cout << "No optimal route found, these containers could not be picked:" << endl;
 		for(unsigned int i = 0; i < failed.size(); i++){

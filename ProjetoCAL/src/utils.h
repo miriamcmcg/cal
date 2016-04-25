@@ -21,8 +21,8 @@
 using namespace std;
 
 typedef pair<vector<GDPointer>, vector<RoadPointer>> GraphInfo;
-typedef pair<vector<GarbageDeposit*>, vector<Road*>> FilteredPath;
-typedef vector<FilteredPath> Route;
+typedef pair<vector<GarbageDeposit*>, vector<Road*>> Path;
+typedef vector<Path> Route;
 typedef pair<Route, vector<GarbageDeposit*>> Data;
 
 

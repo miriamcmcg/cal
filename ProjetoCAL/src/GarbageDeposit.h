@@ -20,8 +20,10 @@ private:
 	unsigned long ID;
 	unsigned int maxCapacity;
 	unsigned int capacityOccupied;
+	double x, y, z;
 public:
-	GarbageDeposit(unsigned long ID, unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0);
+	GarbageDeposit(unsigned long ID, double x, double y, double z,
+			unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0);
 	virtual ~GarbageDeposit() {};
 	bool operator==(const GarbageDeposit &gd) const;
 	bool operator!=(const GarbageDeposit &gd) const;
@@ -32,6 +34,7 @@ public:
 	void empty();
 	void addCapacityOccupied (unsigned int quantity);
 	void setMaxCapacity(unsigned int maxCapacity);
+	string coordsString();
 
 	virtual string print() const;
 };

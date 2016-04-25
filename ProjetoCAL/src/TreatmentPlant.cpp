@@ -1,6 +1,7 @@
 #include "TreatmentPlant.h"
 
-TreatmentPlant::TreatmentPlant(unsigned int ID, string name) : GarbageDeposit(ID, 0, 0) {
+TreatmentPlant::TreatmentPlant(unsigned int ID, string name,
+		double x, double y, double z) : GarbageDeposit(ID, x, y, z, 0, 0) {
 	this->name = name;
 }
 

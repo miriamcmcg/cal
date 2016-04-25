@@ -18,7 +18,7 @@ private:
 	string name;
 
 public:
-	TreatmentPlant(unsigned int ID, string name);
+	TreatmentPlant(unsigned int ID, string name, double x, double y, double z);
 	const string& getName() const;
 	virtual string print() const override;
 };

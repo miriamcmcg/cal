@@ -335,6 +335,7 @@ void createPickRoute(GarbageCentral& gc){
 			data = gc.createPickingRoute(t);
 		}catch (RouteMissingData& e) {
 			cout << "Truck doesn't have enough capacity" << endl;
+			return;
 		}
 		break;
 	case 2:
@@ -343,6 +344,7 @@ void createPickRoute(GarbageCentral& gc){
 			data = gc.createPickingRoute(t, deposits_id);
 		}catch (RouteMissingData& e) {
 			cout << "Truck doesn't have enough capacity or info is missing" << endl;
+			return;
 		}
 		break;
 	case 0:
@@ -355,8 +357,9 @@ void createPickRoute(GarbageCentral& gc){
 
 	cout << "Route generated for truck Nr. " << t << ":" << endl;
 	for (unsigned i = 0; i < route.size(); i++) {
-		auto info = route[i].first;
-		auto roads = route[i].second;
+		auto path = gc.filter(route[i]);
+		auto info = path.first;
+		auto roads = path.second;
 
 		cout << info[SOURCE]->print() << "  --->  ";
 		for (unsigned j = 0; j < roads.size(); j++) {
@@ -365,9 +368,9 @@ void createPickRoute(GarbageCentral& gc){
 		cout << info[DESTINATION]->print() << endl << endl;
 	}
 
-	if(failed.size() != 0)
+	if (failed.size() != 0)
 	{
-		cout << "No optimal route found, these containers could not be picked:" << endl;
+		cout << "No optimal route found for these containers:" << endl;
 		for(unsigned int i = 0; i < failed.size(); i++){
 			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
 		}

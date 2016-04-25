@@ -2,12 +2,16 @@
 #include <random>
 
 
-GarbageDeposit::GarbageDeposit(unsigned long ID, unsigned int maxCapacity, unsigned capacityOccupied) {
+GarbageDeposit::GarbageDeposit(unsigned long ID, double x, double y, double z, unsigned int maxCapacity, unsigned capacityOccupied) {
 
 	if (capacityOccupied > maxCapacity)
 		throw InvalidEntry();
 
 	this->ID = ID;
+	this->x = x;
+	this->y = y;
+	this->z = z;
+
 	this->maxCapacity = maxCapacity;
 
 	if (capacityOccupied != 0)
@@ -58,6 +62,13 @@ void GarbageDeposit::addCapacityOccupied (unsigned int quantity) {
 		capacityOccupied = maxCapacity;
 	else
 		capacityOccupied += quantity;
+}
+
+
+string GarbageDeposit::coordsString() {
+	stringstream ss;
+	ss << "(" << x << "," << y << "," << z << ")";
+	return ss.str();
 }
 
 
