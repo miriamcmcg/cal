@@ -11,6 +11,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdio>
+#include <unistd.h>
 #include <windows.h>
 #include "graphviewer.h"
 #include "GarbageCentral.h"

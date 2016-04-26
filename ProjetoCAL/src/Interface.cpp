@@ -559,6 +559,32 @@ void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 	double rateY = IMG_HEIGHT / (gc.getMaxY() - minY);
 
 
+	//
+	//	if (! route.empty()) {
+	//		gv.addNode(route[0].first[0]->getID(),
+	//				(route[0].first[0]->getX() - minX) * rateX,
+	//				(route[0].first[0]->getY() - minY) * rateY);
+	//
+	//		for (unsigned i = 0; i < route.size(); i++) {
+	//			auto info = route[i].first;
+	//			auto roads = route[i].second;
+	//
+	//			for (unsigned j = 0; j < roads.size(); j++) {
+	//				gv.addNode(info[j+1]->getID(),
+	//						(info[j+1]->getX() - minX) * rateX,
+	//						(info[j+1]->getY() - minY) * rateY);
+	//
+	//				gv.addEdge(roadCounter, info[j]->getID(), info[j+1]->getID(), EdgeType::DIRECTED);
+	//				//gv.setEdgeLabel(roadCounter,road[i-1]->getName());
+	//				roadCounter++;
+	//			}
+	//		}
+	//	}
+	//
+	//	roadCounter=0;
+	//	gv.defineEdgeColor("green");
+	//	gv.defineVertexColor("red");
+
 
 	if (! route.empty()) {
 		gv.addNode(route[0].first[0]->getID(),
@@ -574,9 +600,17 @@ void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 						(info[j+1]->getX() - minX) * rateX,
 						(info[j+1]->getY() - minY) * rateY);
 
+
+
+				Sleep(500);
+				gv.rearrange();
+
 				gv.addEdge(roadCounter, info[j]->getID(), info[j+1]->getID(), EdgeType::DIRECTED);
+
 				//gv.setEdgeLabel(roadCounter,road[i-1]->getName());
 				roadCounter++;
+				Sleep(500);
+				gv.rearrange();
 			}
 		}
 	}
