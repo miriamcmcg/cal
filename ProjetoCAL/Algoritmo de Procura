@@ -1,4 +1,0 @@
-aplicar um dfs() no grafo (recebe vetor);
-pegar em elementos do vetor 2 a 2 - entre elementos onde se quer passar, e aplicar o 
-algortimo de Djikstra, até encontrar a ligação entre eles;
-(possível otimização: escolher os elementos onde se quer passar de acordo com a otimização dos recuros, e a urgência de recolha);

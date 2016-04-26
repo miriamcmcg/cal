@@ -187,7 +187,6 @@ class Graph {
 	vector < vector <int> > W;
 	vector < vector <T> > P;
 
-	//exercicio 5
 	int numCycles;
 	void dfsVisit(Vertex<T,V> *v);
 	void dfsVisit();
@@ -332,11 +331,16 @@ vector<T> Graph<T,V>::dfs() const {
 	typename vector<Vertex<T,V>*>::const_iterator ite= vertexSet.end();
 	for (; it !=ite; it++)
 		(*it)->visited=false;
+
 	vector<T> res;
 	it=vertexSet.begin();
 	for (; it !=ite; it++)
 		if ( (*it)->visited==false )
 			dfs(*it,res);
+
+	for (unsigned i = 0; i < res.size(); i++)
+		cout << res[i].getPointer()->getID() << endl;
+
 	return res;
 }
 
@@ -347,7 +351,7 @@ void Graph<T,V>::dfs(Vertex<T,V> *v,vector<T> &res) const {
 	typename vector<Edge<T,V> >::iterator it= (v->adj).begin();
 	typename vector<Edge<T,V> >::iterator ite= (v->adj).end();
 	for (; it !=ite; it++)
-		if ( it->dest->visited == false ){
+		if ( it->dest->visited == false ) {
 			dfs(it->dest, res);
 		}
 }
