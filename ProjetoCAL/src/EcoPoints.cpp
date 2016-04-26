@@ -9,7 +9,9 @@
 #include "Interface.h"
 
 using namespace std;
-
+/**
+ * Main function
+ */
 int main() {
 	srand(time(NULL));
 
