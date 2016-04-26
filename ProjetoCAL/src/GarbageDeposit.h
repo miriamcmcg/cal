@@ -22,6 +22,7 @@ private:
 	unsigned int capacityOccupied;
 	double x, y, z;
 public:
+	GarbageDeposit() {};
 	GarbageDeposit(unsigned long ID, double x, double y, double z,
 			unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0);
 	virtual ~GarbageDeposit() {};

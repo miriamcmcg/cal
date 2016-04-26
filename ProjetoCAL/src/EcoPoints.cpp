@@ -13,14 +13,13 @@ using namespace std;
 int main() {
 	srand(time(NULL));
 
-		Reader r;
-		r.readFiles();
-		GarbageCentral GC(r);
-		mainMenu(GC);
+	Reader r;
+	r.readFiles();
+	GarbageCentral GC(r);
+	mainMenu(GC);
 
-//	GarbageCentral GC = GarbageCentral();
-//	//GC.test();
-//	mainMenu(GC);
+	//	GarbageCentral GC = GarbageCentral();
+	//	GC.test();
 
 	return 0;
 }

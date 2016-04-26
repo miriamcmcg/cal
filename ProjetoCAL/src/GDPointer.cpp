@@ -5,6 +5,7 @@
 GDPointer::GDPointer(GarbageDeposit *gd){
 	gd_ptr = gd;
 };
+
 GarbageDeposit *GDPointer::getPointer(){
 	return gd_ptr;
 }

@@ -18,38 +18,43 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 	auto map = graph.dfs();
 	auto map_it = begin(map);
 
-	unsigned pickedCounter = 0;
-
 	Route route;
 	vector<GarbageDeposit*> missing_deposits;
+	GarbageDeposit* gd = new GarbageDeposit();
 	vector<GarbageDeposit*>::iterator gd1_it;
-	vector<GarbageDeposit*>::iterator gd2_it;
 
 	while ( (gd1_it = find(begin(to_pick), end(to_pick), map_it->getPointer())) == end(to_pick) ) {
 		map_it++;
 	}
+
+	*gd = **gd1_it;
 	map_it++;
-	pickedCounter++;
 
 
-	while (pickedCounter != to_pick.size()) {
 
-		if ( (gd2_it = find(begin(to_pick), end(to_pick), map_it->getPointer())) != end(to_pick)) {
+	while (to_pick.size() > 1) {
+
+		if ( find(to_pick.begin(), to_pick.end(), map_it->getPointer()) != to_pick.end() ) {
 
 			try {
-				Section section = getShortestPath(*gd1_it, *gd2_it);
+				Section section = getShortestPath(gd, map_it->getPointer());
+				updatePicks(to_pick, section);
 				route.push_back(section);
-				*gd1_it = *gd2_it;
+				*gd = *section.first[section.first.size() - 1];
 			} catch (NoOptimalPath &e) {
-				missing_deposits.push_back(*gd2_it);
-			}
+				missing_deposits.push_back(map_it->getPointer());
 
-			pickedCounter++;
+				for (unsigned i = 0; i < to_pick.size(); i++) {
+					if (*to_pick[i] == *(map_it->getPointer()) )
+						to_pick.erase(begin(to_pick) + i);
+				}
+			}
 		}
 
 		map_it++;
 	}
 
+	delete gd;
 	return make_pair(route, missing_deposits);
 }
 
@@ -138,7 +143,7 @@ void GarbageCentral::sortDeposits(){
 
 GarbageCentral::GarbageCentral() {
 
-	treat_plant = new TreatmentPlant(0, "GarbageCentral", 0, 0, 0);
+	treat_plant = new TreatmentPlant(0, "Central", 0, 0, 0);
 	deposits.push_back(new GarbageDeposit(1, 0, 0, 0, 9000, 500));
 	deposits.push_back(new GarbageDeposit(2, 0, 0, 0, 7000, 1000));
 	deposits.push_back(new GarbageDeposit(3, 0, 0, 0, 15000, 9000));
@@ -151,15 +156,15 @@ GarbageCentral::GarbageCentral() {
 	for (unsigned i = 0; i < deposits.size(); i++)
 		graph.addVertex(GDPointer(deposits[i]));
 
-	roads.push_back(new Road(0, "road 0 (0->1)", 10, 50));
-	roads.push_back(new Road(1, "road 1 (0->2)", 5, 50));
-	roads.push_back(new Road(2, "road 2 (1->2)", 3, 20));
-	roads.push_back(new Road(3, "road 3 (1->3)", 8, 80));
-	roads.push_back(new Road(4, "road 4 (2->3)", 3, 50));
-	roads.push_back(new Road(5, "road 5 (3->5)", 2, 40));
-	roads.push_back(new Road(6, "road 6 (2->6)", 8, 20));
-	roads.push_back(new Road(7, "road 7 (5->1)", 8, 80));
-	roads.push_back(new Road(8, "road 8 (5->6)", 8, 80));
+	roads.push_back(new Road(0, "road 0", 10, 50));
+	roads.push_back(new Road(1, "road 1", 5, 50));
+	roads.push_back(new Road(2, "road 2", 3, 20));
+	roads.push_back(new Road(3, "road 3", 8, 80));
+	roads.push_back(new Road(4, "road 4", 3, 50));
+	roads.push_back(new Road(5, "road 5", 2, 40));
+	roads.push_back(new Road(6, "road 6", 8, 20));
+	roads.push_back(new Road(7, "road 7", 8, 80));
+	roads.push_back(new Road(8, "road 8", 8, 80));
 
 	graph.addEdge(GDPointer(treat_plant), GDPointer(deposits[0]), RoadPointer(roads[0]));
 	graph.addEdge(GDPointer(treat_plant), GDPointer(deposits[1]), RoadPointer(roads[1]));
@@ -168,7 +173,7 @@ GarbageCentral::GarbageCentral() {
 	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[2]), RoadPointer(roads[4]));
 	graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[4]), RoadPointer(roads[5]));
 	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[5]), RoadPointer(roads[6]));
-	graph.addEdge(GDPointer(deposits[5]), GDPointer(deposits[0]), RoadPointer(roads[7]));
+	graph.addEdge(GDPointer(deposits[4]), GDPointer(deposits[0]), RoadPointer(roads[7]));
 	graph.addEdge(GDPointer(deposits[4]), GDPointer(deposits[5]), RoadPointer(roads[8]));
 
 
@@ -194,9 +199,31 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 	GDPointer gd1 = GDPointer(treat_plant);
 	graph.addVertex(gd1);
 
+	minX = it_node1->x;
+	minY = it_node1->y;
+	minZ = it_node1->z;
+	maxX = it_node1->x;
+	maxY = it_node1->y;
+	maxZ = it_node1->y;
+
 	deposits.push_back(new GarbageDeposit(it_node2->node_id, it_node2->x, it_node2->y, it_node2->z));
 	GDPointer gd2 = GDPointer(deposits[0]);
 	graph.addVertex(gd2);
+
+	if (it_node2->x < minX)
+		minX = it_node2->x;
+	else if (it_node2->x > maxX)
+		maxX = it_node2->x;
+
+	if (it_node2->y < minY)
+		minY = it_node2->y;
+	else if (it_node2->y > maxY)
+		maxY = it_node2->y;
+
+	if (it_node2->z < minZ)
+		minZ = it_node2->z;
+	else if (it_node2->z > maxZ)
+		maxZ = it_node2->z;
 
 	double distance = it_node1->distanceFrom(*it_node2);
 	roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
@@ -227,9 +254,25 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 			pos = deposits.size() - 1;
 		}
 
-
 		gd1 = GDPointer(deposits[pos]);
 		graph.addVertex(gd1);
+
+		if (it_node1->x < minX)
+			minX = it_node1->x;
+		else if (it_node1->x > maxX)
+			maxX = it_node1->x;
+
+		if (it_node1->y < minY)
+			minY = it_node1->y;
+		else if (it_node1->y > maxY)
+			maxY = it_node1->y;
+
+		if (it_node1->z < minZ)
+			minZ = it_node1->z;
+		else if (it_node1->z > maxZ)
+			maxZ = it_node1->z;
+
+
 
 		pos = depositPosition(it_node2->node_id);
 		if (pos == -1) {
@@ -238,9 +281,23 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 			pos = deposits.size() - 1;
 		}
 
-
 		gd2 = GDPointer(deposits[pos]);
 		graph.addVertex(gd2);
+
+		if (it_node2->x < minX)
+			minX = it_node2->x;
+		else if (it_node2->x > maxX)
+			maxX = it_node2->x;
+
+		if (it_node2->y < minY)
+			minY = it_node2->y;
+		else if (it_node2->y > maxY)
+			maxY = it_node2->y;
+
+		if (it_node2->z < minZ)
+			minZ = it_node2->z;
+		else if (it_node2->z > maxZ)
+			maxZ = it_node2->z;
 
 
 		double distance = it_node1->distanceFrom(*it_node2);
@@ -310,6 +367,24 @@ Section GarbageCentral::getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2
 
 	return info;
 }
+
+
+void GarbageCentral::updatePicks(vector<GarbageDeposit*>& to_pick, Section section) {
+
+	auto nodes = section.first;
+	for (unsigned i = 0; i < nodes.size() - 1; i++) {
+		for (unsigned j = 0; j < to_pick.size(); j++) {
+			if (*nodes[i] == *to_pick[j]) {
+				to_pick.erase(begin(to_pick) + j);
+				break;
+			}
+		}
+	}
+}
+
+
+
+
 
 
 
@@ -438,7 +513,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																																							 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+																																																																																																																																																																																									 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -454,9 +529,9 @@ void GarbageCentral::listDeposits() const {
 	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																														<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
-																														<< deposits[i]->getMaxCapacity() << " |" << setw(27)
-																														<< deposits[i]->coordsString() << " |" << endl;
+																																																																																																																																																																																<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																																																																																																																																																																																<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																																																																																																																																																																																<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
@@ -493,54 +568,173 @@ bool GarbageCentral::truckCanPick(unsigned int truck_id, unsigned int container_
 }
 
 
+double GarbageCentral::getMinX() const {
+	return minX;
+}
+
+double GarbageCentral::getMinY() const {
+	return minY;
+}
+
+double GarbageCentral::getMinZ() const {
+	return minZ;
+}
+
+double GarbageCentral::getMaxX() const {
+	return maxX;
+}
+
+double GarbageCentral::getMaxY() const {
+	return maxY;
+}
+
+double GarbageCentral::getMaxZ() const {
+	return maxZ;
+}
+
+
 
 void GarbageCentral::test() {
 
-	/***** TESTE 1 ****/
-	cout << "Processing deposits 1, 2 and 3\n";
-	cout << "Expected deposit order: 1 -> 2 -> 3\n";
-	cout << "Expected: road 0, road 2, road 4\n";
-
-	//	vector<GarbageDeposit*> to_pick;
-	//	to_pick.push_back(treat_plant);
-	//	to_pick.push_back(deposits[0]);
-	//	to_pick.push_back(deposits[1]);
-	//	to_pick.push_back(deposits[2]);
-	updateRoadAvailable(0, false);
-	updateRoadAvailable(7, false);
-
 	vector<GarbageDeposit*> to_pick;
 	to_pick.push_back(treat_plant);
+
+	/***** TEST 1.1 ****/
+	// ******* IMPORTANT *******
+	cout << "Processing deposit 2\n";
+	cout << "Expected: road 1\n";
+
 	to_pick.push_back(deposits[1]);
-	to_pick.push_back(deposits[5]);
-	to_pick.push_back(deposits[0]);
+	/******************/
+
+	/***** TEST 1.2 ****/
+	//	cout << "Processing deposit 2\n";
+	//	cout << "Expected: road 0, road 2\n";
+	//
+	//	updateRoadAvailable(1, false);
+	//	to_pick.push_back(deposits[1]);
+	/******************/
+
+
+	/***** TEST 1.3 ****/
+	//		cout << "Processing deposit 2\n";
+	//		cout << "Expected: road 0, road 2\n";
+	//
+	//		updateRoadAvgSpeed(1, 10);
+	//		to_pick.push_back(deposits[1]);
+	/******************/
+
+
+	/***** TEST 2.1 ****/
+	//		cout << "Processing deposits 1, 2, 6\n";
+	//		cout << "Expected: road 0, road 2, road 4, road 5, road 8\n";
+	//
+	//		to_pick.push_back(deposits[0]);
+	//		to_pick.push_back(deposits[1]);
+	//		to_pick.push_back(deposits[5]);
+	/******************/
+
+
+	/***** TEST 2.2 ****/
+	// ******* IMPORTANT *******
+	//	cout << "Processing deposits 1, 2, 6\n";
+	//	cout << "Expected: road 0, road 2, road 6\n";
+	//
+	//	updateRoadAvailable(4, false);
+	//
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[5]);
+	/******************/
+
+
+	/***** TEST 2.3 ****/
+	// ******* IMPORTANT *******
+	//	cout << "Processing deposits 1, 2, 6\n";
+	//	cout << "Expected: road 0, road 2, road 6\n";
+	//
+	//	updateRoadAvgSpeed(4, 0);		// equivalent to set road 4 unavailable
+	//
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[5]);
+	/******************/
+
+
+	/***** TEST 3.1 ****/
+	//		cout << "Processing deposits 1, 2, 5\n";
+	//		cout << "Expected: road 0, road 2, road 4, road 5\n";
+	//
+	//		to_pick.push_back(deposits[0]);
+	//		to_pick.push_back(deposits[1]);
+	//		to_pick.push_back(deposits[4]);
+	/******************/
+
+
+	/***** TEST 3.2 ****/
+	// ******* IMPORTANT *******
+	//	cout << "Processing deposits 1, 2, 5\n";
+	//	cout << "Expected: road 1, road 4, road 5, road 7\n";
+	//
+	//	updateRoadAvailable(0, false);
+	//
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[4]);
+	/******************/
+
+
+	/***** TEST 3.3 ****/
+	// ******* IMPORTANT *******
+	//		cout << "Processing deposit 1, 2, 5\n";
+	//		cout << "Expected: road 1, road 4, road 5\n";
+	//		cout << "Note: Deposit 1 shouldn't be reachable\n";
+	//
+	//		updateRoadAvailable(0, false);
+	//		updateRoadAvailable(7, false);
+	//
+	//		to_pick.push_back(deposits[0]);
+	//		to_pick.push_back(deposits[1]);
+	//		to_pick.push_back(deposits[4]);
+	/******************/
+
+
+	/***** TEST 4 ****/
+	//	cout << "Processing deposit 4\n";
+	//	cout << "Deposit 4 shouldn't be reachable\n";
+	//
+	//	to_pick.push_back(deposits[3]);
+	/******************/
+
+
+
+	cout << "--------------------------------------------\n";
 
 	Data data = getRoute(to_pick);
 
 	auto route = data.first;
 	auto failed = data.second;
-	for (unsigned i = 0; i < route.size(); i++) {
-		auto info = route[i].first;
-		auto roads = route[i].second;
 
-		cout << info[SOURCE]->print() << "  --->  ";
-		for (unsigned j = 0; j < roads.size(); j++) {
-			cout << roads[j]->print() << "  --->  ";
+	if (! route.empty()) {
+		cout << route[0].first[0]->print();
+		for (unsigned i = 0; i < route.size(); i++) {
+			auto info = route[i].first;
+			auto roads = route[i].second;
+
+			for (unsigned j = 0; j < roads.size(); j++) {
+				cout << "  --->  " << roads[j]->print();
+				cout << "  --->  " << info[j+1]->print();
+			}
 		}
-		cout << info[DESTINATION]->print() << endl;
 	}
 
 	if (failed.size() != 0)
 	{
-		cout << "No optimal route found, these containers could not be picked:" << endl;
+		cout << "\n\nNo optimal route found for these containers:" << endl;
 		for(unsigned int i = 0; i < failed.size(); i++){
 			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
 		}
 	}
-	/******************/
-
-
-
 }
 
 

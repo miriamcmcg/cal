@@ -30,6 +30,9 @@ class GarbageTruck;
 
 class GarbageCentral {
 private:
+	double minX, minY, minZ;
+	double maxX, maxY, maxZ;
+
 	Graph<GDPointer, RoadPointer> graph;
 	vector<GarbageTruck> trucks;
 	vector<GarbageDeposit*> deposits;
@@ -42,6 +45,7 @@ private:
 	int truckPosition(unsigned int id) const;
 	void sortDeposits();
 	Section getShortestPath(GarbageDeposit* gd1, GarbageDeposit* gd2);
+	void updatePicks(vector<GarbageDeposit*>& to_pick, Section section);
 public:
 	GarbageCentral();
 	GarbageCentral(const Reader& r);
@@ -60,6 +64,12 @@ public:
 	bool truckCanPick(unsigned int truck_id, unsigned int container_id);
 	Section filter(const Section &p);
 	Section convert(const GraphInfo &p);
+	double getMinX() const;
+	double getMinY() const;
+	double getMinZ() const;
+	double getMaxX() const;
+	double getMaxY() const;
+	double getMaxZ() const;
 
 	/* PARA EFEITOS DE TESTE */
 	void test();

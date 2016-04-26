@@ -16,6 +16,9 @@
 #include "GarbageCentral.h"
 
 
+#define IMG_WIDTH	2713
+#define	IMG_HEIGHT	1452
+
 using namespace std;
 
 void ClearScreen();
@@ -34,6 +37,6 @@ void createPickRoute(GarbageCentral& gc);
 void updateCapacityOccupied(GarbageCentral& gc);
 void updateAvgSpeedRoad(GarbageCentral& gc);
 void updateAvailableRoad(GarbageCentral& gc);
-void displayGraphViewer(vector<Section> route);
+void displayGraphViewer(vector<Section> route, const GarbageCentral& gc);
 
 #endif /* SRC_INTERFACE_H_ */

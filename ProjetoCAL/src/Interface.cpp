@@ -353,30 +353,36 @@ void createPickRoute(GarbageCentral& gc){
 	}
 
 
+
+	cout << "Route generated for truck Nr. " << t << ":" << endl;
+
 	auto route = data.first;
 	auto failed = data.second;
 
-	cout << "Route generated for truck Nr. " << t << ":" << endl;
-	for (unsigned i = 0; i < route.size(); i++) {
-		auto path = gc.filter(route[i]);
-		auto info = path.first;
-		auto roads = path.second;
+	if (! route.empty()) {
+		cout << route[0].first[0]->print();
+		for (unsigned i = 0; i < route.size(); i++) {
+			auto info = route[i].first;
+			auto roads = route[i].second;
 
-		cout << info[SOURCE]->print() << "  --->  ";
-		for (unsigned j = 0; j < roads.size(); j++) {
-			cout << roads[j]->print() << "  --->  " ;
+			for (unsigned j = 0; j < roads.size(); j++) {
+				cout << "  --->  " << roads[j]->print();
+				cout << "  --->  " << info[j+1]->print();
+			}
 		}
-		cout << info[DESTINATION]->print() << endl << endl;
 	}
+
+
 
 	if (failed.size() != 0)
 	{
-		cout << "No optimal route found for these containers:" << endl;
+		cout << "\n\nNo optimal route found for these containers:" << endl;
 		for(unsigned int i = 0; i < failed.size(); i++){
 			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
 		}
 	}
-	displayGraphViewer(route);
+
+	displayGraphViewer(route, gc);
 }
 
 
@@ -535,35 +541,65 @@ void updateAvailableRoad(GarbageCentral& gc) {
 		gc.updateRoadAvailable(roadID, false);
 }
 
-void displayGraphViewer(vector<Section> route)
+void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 {
-	GraphViewer *gv = new GraphViewer(600, 600, false);
-	//gv->setBackground("map.png");
+	GraphViewer gv = GraphViewer(IMG_WIDTH, IMG_HEIGHT, false);
+	gv.setBackground("map.png");
 
-	gv->createWindow(600, 600);
+	gv.createWindow(800, 480);
 
-	gv->defineEdgeDashed(false);
-	gv->defineEdgeColor("black");
-	gv->defineVertexColor("blue");
+	gv.defineEdgeDashed(false);
+	gv.defineEdgeColor("black");
+	gv.defineVertexColor("blue");
 	unsigned roadCounter = 0;
 
-	for(auto section: route)
-	{
-		auto info = section.first;
-		auto road = section.second;
-		gv->addNode(info[0]->getID(),0,0);
-		gv->setVertexLabel(info[0]->getID(),info[0]->print());
+	double minX = gc.getMinX();
+	double minY = gc.getMinY();
+	double rateX = IMG_WIDTH / (gc.getMaxX() - minX);
+	double rateY = IMG_HEIGHT / (gc.getMaxY() - minY);
 
-		for(unsigned i =1; i < info.size(); i++)
-		{
-			gv->addNode(info[i]->getID(),(info[i]->getX()-4740)*100,(info[i]->getY()-4140)*100);
-			gv->setVertexLabel(info[i]->getID(),info[i]->print());
-			gv->addEdge(roadCounter,info[i-1]->getID(), info[i]->getID(), EdgeType::DIRECTED);
-			gv->setEdgeLabel(roadCounter,road[i-1]->getName());
-			roadCounter++;
+
+
+	if (! route.empty()) {
+		gv.addNode(route[0].first[0]->getID(),
+				(route[0].first[0]->getX() - minX) * rateX,
+				(route[0].first[0]->getY() - minY) * rateY);
+
+		for (unsigned i = 0; i < route.size(); i++) {
+			auto info = route[i].first;
+			auto roads = route[i].second;
+
+			for (unsigned j = 0; j < roads.size(); j++) {
+				gv.addNode(info[j+1]->getID(),
+						(info[j+1]->getX() - minX) * rateX,
+						(info[j+1]->getY() - minY) * rateY);
+
+				gv.addEdge(roadCounter, info[j]->getID(), info[j+1]->getID(), EdgeType::DIRECTED);
+				//gv.setEdgeLabel(roadCounter,road[i-1]->getName());
+				roadCounter++;
+			}
 		}
 	}
 
-	gv->rearrange();
-	Sleep(2000);
+	//	for(auto section: route)
+	//	{
+	//		auto info = section.first;
+	//		auto road = section.second;
+	//		gv.addNode(info[0]->getID(),
+	//				(info[0]->getX() - minX) * rateX,
+	//				(info[0]->getY() - minY) * rateY);
+	//		gv.setVertexLabel(info[0]->getID(),info[0]->print());
+	//
+	//		for(unsigned i =1; i < info.size(); i++)
+	//		{
+	//			gv.addNode(info[i]->getID(),
+	//					(info[i]->getX() - minX) * rateX,
+	//					(info[i]->getY() - minY) * rateY);
+	//			gv.setVertexLabel(info[i]->getID(),info[i]->print());
+	//
+	//			gv.addEdge(roadCounter, info[i-1]->getID(), info[i]->getID(), EdgeType::DIRECTED);
+	//			//gv.setEdgeLabel(roadCounter,road[i-1]->getName());
+	//			roadCounter++;
+	//		}
+	//	}
 }
