@@ -2,7 +2,7 @@
  * TreatmentPlant.h
  *
  *  Created on: 21/04/2016
- *      Author: User
+ *      Author: Bruno Barros, João Barbosa, Miriam Gonçalves
  */
 
 #ifndef SRC_TREATMENTPLANT_H_

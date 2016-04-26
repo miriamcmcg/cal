@@ -2,7 +2,7 @@
  * GarbageCentral.h
  *
  *  Created on: 17/04/2016
- *      Author: User
+ *      Author: Bruno Barros, João Barbosa, Miriam Gonçalves
  */
 
 #ifndef GARBAGECENTRAL_H_

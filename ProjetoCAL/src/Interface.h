@@ -2,7 +2,7 @@
  * Interface.h
  *
  *  Created on: 21/04/2016
- *      Author: Bruno
+ *      Author: Bruno Barros, João Barbosa, Miriam Gonçalves
  */
 
 #ifndef SRC_INTERFACE_H_

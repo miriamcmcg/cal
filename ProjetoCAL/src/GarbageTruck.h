@@ -2,7 +2,7 @@
  * GarbageTruck.h
  *
  *  Created on: 16/04/2016
- *      Author: User
+ *      Author: Bruno Barros, João Barbosa, Miriam Gonçalves
  */
 
 #ifndef GARBAGETRUCK_H_

@@ -2,7 +2,7 @@
  * GDPointer.h
  *
  *  Created on: 20/04/2016
- *      Author: User
+ *      Author: Bruno Barros, João Barbosa, Miriam Gonçalves
  */
 
 #ifndef SRC_GDPOINTER_H_

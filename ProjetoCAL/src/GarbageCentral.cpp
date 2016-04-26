@@ -1,11 +1,3 @@
-/*
- * GarbageCentral.cpp
- *
- *  Created on: 17/04/2016
- *      Author: User
- */
-
-
 #include "GarbageCentral.h"
 
 
@@ -190,98 +182,27 @@ GarbageCentral::GarbageCentral() {
 
 GarbageCentral::GarbageCentral(const Reader& r) {
 
-	auto it = begin(r.relations);
-	auto it_road = r.links.find(Link(it->road_id));
-	auto it_node1 = r.nodes.find(Node(it->node1_id));
-	auto it_node2 = r.nodes.find(Node(it->node2_id));
 
-	treat_plant = new TreatmentPlant(it_node1->node_id, "Central", it_node1->x, it_node1->y, it_node1->z);
-	GDPointer gd1 = GDPointer(treat_plant);
-	graph.addVertex(gd1);
+	if (! r.relations.empty()) {
 
-	minX = it_node1->x;
-	minY = it_node1->y;
-	minZ = it_node1->z;
-	maxX = it_node1->x;
-	maxY = it_node1->y;
-	maxZ = it_node1->y;
+		auto it = begin(r.relations);
+		auto it_road = r.links.find(Link(it->road_id));
+		auto it_node1 = r.nodes.find(Node(it->node1_id));
+		auto it_node2 = r.nodes.find(Node(it->node2_id));
 
-	deposits.push_back(new GarbageDeposit(it_node2->node_id, it_node2->x, it_node2->y, it_node2->z));
-	GDPointer gd2 = GDPointer(deposits[0]);
-	graph.addVertex(gd2);
-
-	if (it_node2->x < minX)
-		minX = it_node2->x;
-	else if (it_node2->x > maxX)
-		maxX = it_node2->x;
-
-	if (it_node2->y < minY)
-		minY = it_node2->y;
-	else if (it_node2->y > maxY)
-		maxY = it_node2->y;
-
-	if (it_node2->z < minZ)
-		minZ = it_node2->z;
-	else if (it_node2->z > maxZ)
-		maxZ = it_node2->z;
-
-	double distance = it_node1->distanceFrom(*it_node2);
-	roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
-	RoadPointer road_ptr = RoadPointer(roads[0]);
-
-	if (it_road->two_way)
-	{
-		graph.addEdge(gd1, gd2, road_ptr);
-		graph.addEdge(gd2, gd1, road_ptr);
-	}
-	else
-		graph.addEdge(gd1, gd2, road_ptr);
-
-
-	it++;
-	for (; it != end(r.relations); it++) {
-
-		it_road = r.links.find(Link(it->road_id));
-		it_node1 = r.nodes.find(Node(it->node1_id));
-		it_node2 = r.nodes.find(Node(it->node2_id));
-
-		int pos;
-		pos = depositPosition(it_node1->node_id);
-		if (pos == -1) {
-			deposits.push_back(new GarbageDeposit(it_node1->node_id,
-					it_node1->x, it_node1->y, it_node1->z));
-
-			pos = deposits.size() - 1;
-		}
-
-		gd1 = GDPointer(deposits[pos]);
+		treat_plant = new TreatmentPlant(it_node1->node_id, "Central", it_node1->x, it_node1->y, it_node1->z);
+		GDPointer gd1 = GDPointer(treat_plant);
 		graph.addVertex(gd1);
 
-		if (it_node1->x < minX)
-			minX = it_node1->x;
-		else if (it_node1->x > maxX)
-			maxX = it_node1->x;
+		minX = it_node1->x;
+		minY = it_node1->y;
+		minZ = it_node1->z;
+		maxX = it_node1->x;
+		maxY = it_node1->y;
+		maxZ = it_node1->y;
 
-		if (it_node1->y < minY)
-			minY = it_node1->y;
-		else if (it_node1->y > maxY)
-			maxY = it_node1->y;
-
-		if (it_node1->z < minZ)
-			minZ = it_node1->z;
-		else if (it_node1->z > maxZ)
-			maxZ = it_node1->z;
-
-
-
-		pos = depositPosition(it_node2->node_id);
-		if (pos == -1) {
-			deposits.push_back(new GarbageDeposit(it_node2->node_id,
-					it_node2->x, it_node2->y, it_node2->z));
-			pos = deposits.size() - 1;
-		}
-
-		gd2 = GDPointer(deposits[pos]);
+		deposits.push_back(new GarbageDeposit(it_node2->node_id, it_node2->x, it_node2->y, it_node2->z));
+		GDPointer gd2 = GDPointer(deposits[0]);
 		graph.addVertex(gd2);
 
 		if (it_node2->x < minX)
@@ -299,16 +220,9 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 		else if (it_node2->z > maxZ)
 			maxZ = it_node2->z;
 
-
 		double distance = it_node1->distanceFrom(*it_node2);
-
-		pos = roadPosition(it_road->link_id);
-		if(pos == -1){
-			roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
-			pos = roads.size() - 1;
-		}
-
-		road_ptr = RoadPointer(roads[pos]);
+		roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
+		RoadPointer road_ptr = RoadPointer(roads[0]);
 
 		if (it_road->two_way)
 		{
@@ -317,11 +231,91 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 		}
 		else
 			graph.addEdge(gd1, gd2, road_ptr);
+
+
+		it++;
+		for (; it != end(r.relations); it++) {
+
+			it_road = r.links.find(Link(it->road_id));
+			it_node1 = r.nodes.find(Node(it->node1_id));
+			it_node2 = r.nodes.find(Node(it->node2_id));
+
+			int pos;
+			pos = depositPosition(it_node1->node_id);
+			if (pos == -1) {
+				deposits.push_back(new GarbageDeposit(it_node1->node_id,
+						it_node1->x, it_node1->y, it_node1->z));
+
+				pos = deposits.size() - 1;
+			}
+
+			gd1 = GDPointer(deposits[pos]);
+			graph.addVertex(gd1);
+
+			if (it_node1->x < minX)
+				minX = it_node1->x;
+			else if (it_node1->x > maxX)
+				maxX = it_node1->x;
+
+			if (it_node1->y < minY)
+				minY = it_node1->y;
+			else if (it_node1->y > maxY)
+				maxY = it_node1->y;
+
+			if (it_node1->z < minZ)
+				minZ = it_node1->z;
+			else if (it_node1->z > maxZ)
+				maxZ = it_node1->z;
+
+
+
+			pos = depositPosition(it_node2->node_id);
+			if (pos == -1) {
+				deposits.push_back(new GarbageDeposit(it_node2->node_id,
+						it_node2->x, it_node2->y, it_node2->z));
+				pos = deposits.size() - 1;
+			}
+
+			gd2 = GDPointer(deposits[pos]);
+			graph.addVertex(gd2);
+
+			if (it_node2->x < minX)
+				minX = it_node2->x;
+			else if (it_node2->x > maxX)
+				maxX = it_node2->x;
+
+			if (it_node2->y < minY)
+				minY = it_node2->y;
+			else if (it_node2->y > maxY)
+				maxY = it_node2->y;
+
+			if (it_node2->z < minZ)
+				minZ = it_node2->z;
+			else if (it_node2->z > maxZ)
+				maxZ = it_node2->z;
+
+
+			double distance = it_node1->distanceFrom(*it_node2);
+
+			pos = roadPosition(it_road->link_id);
+			if(pos == -1){
+				roads.push_back(new Road(it_road->link_id, it_road->link_name, distance, rand() % 70));
+				pos = roads.size() - 1;
+			}
+
+			road_ptr = RoadPointer(roads[pos]);
+
+			if (it_road->two_way)
+			{
+				graph.addEdge(gd1, gd2, road_ptr);
+				graph.addEdge(gd2, gd1, road_ptr);
+			}
+			else
+				graph.addEdge(gd1, gd2, road_ptr);
+		}
+
+		sortDeposits();
 	}
-
-	sortDeposits();
-
-
 
 
 	ifstream in("trucks.txt");
@@ -513,7 +507,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																																																																																																																																																																																									 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+																																																																																																																																																																																																	 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -529,9 +523,9 @@ void GarbageCentral::listDeposits() const {
 	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																																																																																																																																																																																<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
-																																																																																																																																																																																<< deposits[i]->getMaxCapacity() << " |" << setw(27)
-																																																																																																																																																																																<< deposits[i]->coordsString() << " |" << endl;
+																																																																																																																																																																																								<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																																																																																																																																																																																								<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																																																																																																																																																																																								<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
@@ -599,20 +593,19 @@ void GarbageCentral::test() {
 	vector<GarbageDeposit*> to_pick;
 	to_pick.push_back(treat_plant);
 
-	/***** TEST 1.1 ****/
-	// ******* IMPORTANT *******
-	cout << "Processing deposit 2\n";
-	cout << "Expected: road 1\n";
+	/***** TEST 1.1 ****///	cout << "Processing deposit 2\n";
+	//	cout << "Expected: road 1\n";
+	//
+	//	to_pick.push_back(deposits[1]);
 
-	to_pick.push_back(deposits[1]);
 	/******************/
 
 	/***** TEST 1.2 ****/
-	//	cout << "Processing deposit 2\n";
-	//	cout << "Expected: road 0, road 2\n";
+	//		cout << "Processing deposit 2\n";
+	//		cout << "Expected: road 0, road 2\n";
 	//
-	//	updateRoadAvailable(1, false);
-	//	to_pick.push_back(deposits[1]);
+	//		updateRoadAvailable(1, false);
+	//		to_pick.push_back(deposits[1]);
 	/******************/
 
 
@@ -686,16 +679,16 @@ void GarbageCentral::test() {
 
 	/***** TEST 3.3 ****/
 	// ******* IMPORTANT *******
-	//		cout << "Processing deposit 1, 2, 5\n";
-	//		cout << "Expected: road 1, road 4, road 5\n";
-	//		cout << "Note: Deposit 1 shouldn't be reachable\n";
+	//			cout << "Processing deposit 1, 2, 5\n";
+	//			cout << "Expected: road 1, road 4, road 5\n";
+	//			cout << "Note: Deposit 1 shouldn't be reachable\n";
 	//
-	//		updateRoadAvailable(0, false);
-	//		updateRoadAvailable(7, false);
+	//			updateRoadAvailable(0, false);
+	//			updateRoadAvailable(7, false);
 	//
-	//		to_pick.push_back(deposits[0]);
-	//		to_pick.push_back(deposits[1]);
-	//		to_pick.push_back(deposits[4]);
+	//			to_pick.push_back(deposits[0]);
+	//			to_pick.push_back(deposits[1]);
+	//			to_pick.push_back(deposits[4]);
 	/******************/
 
 

@@ -1,10 +1,3 @@
-/*
- * Reader.cpp
- *
- *  Created on: 13/04/2016
- *      Author: User
- */
-
 #include "Reader.h"
 
 using namespace std;

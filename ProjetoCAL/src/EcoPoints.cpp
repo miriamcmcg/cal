@@ -18,6 +18,8 @@ int main() {
 	GarbageCentral GC(r);
 	mainMenu(GC);
 
+	/*****************************************************/
+
 	//	GarbageCentral GC = GarbageCentral();
 	//	GC.test();
 
