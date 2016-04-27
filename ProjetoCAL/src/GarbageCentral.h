@@ -149,8 +149,10 @@ public:
 	 *
 	 * update the deposit to capOcup
 	 * if the deposit does not exist throws DepositNonExistent exception type
+	 *
+	 * @param returns true if is a valid capacity
 	 */
-	void updateDepositOccupied(unsigned int depositID, unsigned int capOcup);
+	bool updateDepositOccupied(unsigned int depositID, unsigned int capOcup);
 	/**
 	 * listTrucks function
 	 *

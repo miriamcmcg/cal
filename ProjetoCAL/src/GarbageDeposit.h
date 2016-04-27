@@ -70,8 +70,10 @@ public:
 	/**
 	 * setCapacityOccupied function
 	 * @param new value of CapacityOccupied of GarbageDeposit
+	 *
+	 * @return returns true if is a valid capacity
 	 */
-	void setCapacityOccupied(unsigned int capacityOccupied);
+	bool setCapacityOccupied(unsigned int capacityOccupied);
 	/**
 	 * getX function
 	 * @return x coordinate of GarbageDeposit

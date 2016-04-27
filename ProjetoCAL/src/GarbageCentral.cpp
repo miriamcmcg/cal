@@ -37,8 +37,10 @@ Data GarbageCentral::getRoute(vector<GarbageDeposit*> to_pick) {
 				missing_deposits.push_back(map_it->getPointer());
 
 				for (unsigned i = 0; i < to_pick.size(); i++) {
-					if (*to_pick[i] == *(map_it->getPointer()) )
+					if ( *to_pick[i] == *(map_it->getPointer()) ) {
 						to_pick.erase(begin(to_pick) + i);
+						break;
+					}
 				}
 			}
 		}
@@ -160,7 +162,7 @@ GarbageCentral::GarbageCentral() {
 
 	graph.addEdge(GDPointer(treat_plant), GDPointer(deposits[0]), RoadPointer(roads[0]));
 	graph.addEdge(GDPointer(treat_plant), GDPointer(deposits[1]), RoadPointer(roads[1]));
-	//graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[1]), RoadPointer(roads[2]));
+	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[1]), RoadPointer(roads[2]));
 	graph.addEdge(GDPointer(deposits[0]), GDPointer(deposits[2]), RoadPointer(roads[3]));
 	graph.addEdge(GDPointer(deposits[1]), GDPointer(deposits[2]), RoadPointer(roads[4]));
 	graph.addEdge(GDPointer(deposits[2]), GDPointer(deposits[4]), RoadPointer(roads[5]));
@@ -489,15 +491,18 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned in
 
 
 
-void GarbageCentral::updateDepositOccupied(unsigned int depositID, unsigned int capOcup) {
+bool GarbageCentral::updateDepositOccupied(unsigned int depositID, unsigned int capOcup) {
 
 	int pos = depositPosition(depositID);
 
 	if (pos == -1)
 		throw DepositNonExistent();
 
-	deposits[pos]->setCapacityOccupied(capOcup);
+	if(! deposits[pos]->setCapacityOccupied(capOcup))
+		return false;
+
 	sortDeposits();
+	return true;
 }
 
 
@@ -507,7 +512,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																																																																																																																																																																																																											 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+																																																																																																																																																																																																																	 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -523,9 +528,9 @@ void GarbageCentral::listDeposits() const {
 	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																																																																																																																																																																																																		<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
-																																																																																																																																																																																																		<< deposits[i]->getMaxCapacity() << " |" << setw(27)
-																																																																																																																																																																																																		<< deposits[i]->coordsString() << " |" << endl;
+																																																																																																																																																																																																								<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																																																																																																																																																																																																								<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																																																																																																																																																																																																								<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
@@ -536,12 +541,12 @@ bool GarbageCentral::hasDeposit(unsigned int id) const {
 
 
 void GarbageCentral::listRoads() const {
-	cout << " " << setw(15) << "ID" << " |" <<  setw(25) << "Name" << " |" << setw(9) << "Distance" << " |" << setw(14) <<"Average Speed" << " |"<< endl;
-	cout << " -----------------------------------------------------------------------" << endl;
+	cout << " " << setw(15) << "ID" << " |" <<  setw(40) << "Name" << " |" << setw(11) << "Distance" << " |" << setw(14) <<"Average Speed" << " |"<< endl;
+	cout << " ----------------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < roads.size(); i++){
 		cout << " " << setw(15) << roads[i]->getID() << " |"
-				<< setw(25) << roads[i]->getName() << " |"
-				<< setw(9) << roads[i]->getDistance() << " |"
+				<< setw(40) << roads[i]->getName() << " |"
+				<< setw(11) << roads[i]->getDistance() << " |"
 				<< setw(14) << roads[i]->getAvgSpeed() << " |\n";
 	}
 }
@@ -593,18 +598,19 @@ void GarbageCentral::test() {
 	vector<GarbageDeposit*> to_pick;
 	to_pick.push_back(treat_plant);
 
-	/***** TEST 1.1 ****///	cout << "Processing deposit 2\n";
+	/***** TEST 1.1 ****/
+	//	cout << "Processing deposit 2\n";
 	//	cout << "Expected: road 1\n";
 	//
 	//	to_pick.push_back(deposits[1]);
 	/******************/
 
 	/***** TEST 1.2 ****/
-	//		cout << "Processing deposit 2\n";
-	//		cout << "Expected: road 0, road 2\n";
+	//	cout << "Processing deposit 2\n";
+	//	cout << "Expected: road 0, road 2\n";
 	//
-	//		updateRoadAvailable(1, false);
-	//		to_pick.push_back(deposits[1]);
+	//	updateRoadAvailable(1, false);
+	//	to_pick.push_back(deposits[1]);
 	/******************/
 
 
@@ -618,12 +624,12 @@ void GarbageCentral::test() {
 
 
 	/***** TEST 2.1 ****/
-	//		cout << "Processing deposits 1, 2, 6\n";
-	//		cout << "Expected: road 0, road 2, road 4, road 5, road 8\n";
+	//	cout << "Processing deposits 1, 2, 6\n";
+	//	cout << "Expected: road 0, road 2, road 4, road 5, road 8\n";
 	//
-	//		to_pick.push_back(deposits[0]);
-	//		to_pick.push_back(deposits[1]);
-	//		to_pick.push_back(deposits[5]);
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[5]);
 	/******************/
 
 
@@ -654,12 +660,12 @@ void GarbageCentral::test() {
 
 
 	/***** TEST 3.1 ****/
-	//		cout << "Processing deposits 1, 2, 5\n";
-	//		cout << "Expected: road 0, road 2, road 4, road 5\n";
+	//	cout << "Processing deposits 1, 2, 5\n";
+	//	cout << "Expected: road 0, road 2, road 4, road 5\n";
 	//
-	//		to_pick.push_back(deposits[0]);
-	//		to_pick.push_back(deposits[1]);
-	//		to_pick.push_back(deposits[4]);
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[4]);
 	/******************/
 
 
@@ -678,16 +684,16 @@ void GarbageCentral::test() {
 
 	/***** TEST 3.3 ****/
 	// ******* IMPORTANT *******
-	//			cout << "Processing deposit 1, 2, 5\n";
-	//			cout << "Expected: road 1, road 4, road 5\n";
-	//			cout << "Note: Deposit 1 shouldn't be reachable\n";
+	//	cout << "Processing deposit 1, 2, 5\n";
+	//	cout << "Expected: road 1, road 4, road 5\n";
+	//	cout << "Note: Deposit 1 shouldn't be reachable\n";
 	//
-	//			updateRoadAvailable(0, false);
-	//			updateRoadAvailable(7, false);
+	//	updateRoadAvailable(0, false);
+	//	updateRoadAvailable(7, false);
 	//
-	//			to_pick.push_back(deposits[0]);
-	//			to_pick.push_back(deposits[1]);
-	//			to_pick.push_back(deposits[4]);
+	//	to_pick.push_back(deposits[0]);
+	//	to_pick.push_back(deposits[1]);
+	//	to_pick.push_back(deposits[4]);
 	/******************/
 
 

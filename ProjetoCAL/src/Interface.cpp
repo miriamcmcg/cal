@@ -427,7 +427,7 @@ void updateCapacityOccupied(GarbageCentral& gc) {
 	do {
 		getEntry(quantity);
 
-		if (quantity >= 0)
+		if ( gc.updateDepositOccupied(depID, quantity) )
 			valid = true;
 		else
 		{

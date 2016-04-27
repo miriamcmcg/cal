@@ -338,9 +338,6 @@ vector<T> Graph<T,V>::dfs() const {
 		if ( (*it)->visited==false )
 			dfs(*it,res);
 
-	for (unsigned i = 0; i < res.size(); i++)
-		cout << res[i].getPointer()->getID() << endl;
-
 	return res;
 }
 

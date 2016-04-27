@@ -34,8 +34,11 @@ unsigned int GarbageDeposit::getCapacityOccupied() const {
 	return capacityOccupied;
 }
 
-void GarbageDeposit::setCapacityOccupied(unsigned int capacityOccupied) {
+bool GarbageDeposit::setCapacityOccupied(unsigned int capacityOccupied) {
+	if (capacityOccupied < 0 || capacityOccupied > maxCapacity)
+		return false;
 	this->capacityOccupied = capacityOccupied;
+	return true;
 }
 
 double GarbageDeposit::getX() const{
