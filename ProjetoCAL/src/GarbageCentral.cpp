@@ -541,11 +541,11 @@ bool GarbageCentral::hasDeposit(unsigned int id) const {
 
 
 void GarbageCentral::listRoads() const {
-	cout << " " << setw(15) << "ID" << " |" <<  setw(40) << "Name" << " |" << setw(11) << "Distance" << " |" << setw(14) <<"Average Speed" << " |"<< endl;
+	cout << " " << setw(15) << "ID" << " |" <<  setw(50) << "Name" << " |" << setw(11) << "Distance" << " |" << setw(14) <<"Average Speed" << " |"<< endl;
 	cout << " ----------------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < roads.size(); i++){
 		cout << " " << setw(15) << roads[i]->getID() << " |"
-				<< setw(40) << roads[i]->getName() << " |"
+				<< setw(50) << roads[i]->getName() << " |"
 				<< setw(11) << roads[i]->getDistance() << " |"
 				<< setw(14) << roads[i]->getAvgSpeed() << " |\n";
 	}

@@ -1,0 +1,4 @@
+<map id="GarbageCentral::createPickingRoute" name="GarbageCentral::createPickingRoute">
+<area shape="rect" id="node2" href="$class_garbage_truck.html#acf3bdf5f2cd887b62afd4afc35fa3a4e" title="GarbageTruck::empty" alt="" coords="269,5,415,32"/>
+<area shape="rect" id="node3" href="$class_garbage_truck.html#a9e88c2e4020f7151754e66b30fb84ca1" title="GarbageTruck::addCarrying" alt="" coords="252,56,432,83"/>
+</map>

@@ -95,7 +95,7 @@ public:
 	 * @param x Posição horizontal do nó.
 	 * @param y Posição vertical do nó.
 	 */
-	bool addNode(unsigned long id, int x, int y);
+	bool addNode(int id, int x, int y);
 
 	/**
 	 * Acrescenta um nó à representação do grafo, numa posição ao critério do programa.
@@ -106,7 +106,7 @@ public:
 	 *
 	 * @param id Identificador único do nó.
 	 */
-	bool addNode(unsigned long id);
+	bool addNode(int id);
 
 	/**
 	 * Acrescenta uma aresta à representação do grafo.
@@ -120,7 +120,7 @@ public:
 	 * @param edgeType EdgeType.DIRECTED caso a aresta seja unidirecional
 	 * ou EdgeType.UNDIRECTED caso a aresta seja bidirecional.
 	 */
-	bool addEdge(unsigned long id, unsigned long v1, unsigned long v2, int edgeType);
+	bool addEdge(int id, int v1, int v2, int edgeType);
 
 	/**
 	 * Remove um nó da representação do grafo e todas as arestas ligadas a este.
@@ -129,7 +129,7 @@ public:
 	 *
 	 * @param id Identificador único do nó a a remover.
 	 */
-	bool removeNode(unsigned long id);
+	bool removeNode(int id);
 
 	/**
 	 * Remove uma aresta da representação do grafo.
@@ -138,7 +138,7 @@ public:
 	 *
 	 * @param id Identificador único da aresta a remover.
 	 */
-	bool removeEdge(unsigned long id);
+	bool removeEdge(int id);
 
 	/**
 	 * Função que define o texto de um nó.
@@ -148,7 +148,7 @@ public:
 	 * @param id Identificador único do nó com o texto a alterar.
 	 * @param label Novo texto do nó.
 	 */
-	bool setVertexLabel(unsigned long id, string label);
+	bool setVertexLabel(int id, string label);
 
 	/**
 	 * Função que define o texto de uma aresta.
@@ -158,7 +158,7 @@ public:
 	 * @param id Identificador único da aresta com o texto a alterar.
 	 * @param label Novo texto da aresta.
 	 */
-	bool setEdgeLabel(unsigned long id, string label);
+	bool setEdgeLabel(int id, string label);
 
 	/**
 	 * Função que define a cor de uma aresta.
@@ -168,7 +168,7 @@ public:
 	 * @param id Identificador único da aresta com a cor a alterar.
 	 * @param color Nova cor da aresta, utilizar as constantes definidas no graphviewer.h para conveniência.
 	 */
-	bool setEdgeColor(unsigned long id, string color);
+	bool setEdgeColor(int id, string color);
 
 	/**
 	 * Função que define se uma aresta é desenhada, ou não, a tracejado.
@@ -178,7 +178,7 @@ public:
 	 * @param id Identificador único da aresta com a cor a alterar.
 	 * @param dashed Nova cor da aresta, utilizar as constantes definidas no graphviewer.h para conveniência.
 	 */
-	bool setEdgeDashed(unsigned long id, bool dashed);
+	bool setEdgeDashed(int id, bool dashed);
 
 	/**
 	 * Função que define a cor de um nó.
@@ -188,7 +188,7 @@ public:
 	 * @param id Identificador único do nó com a cor a alterar.
 	 * @param color Nova cor do nó, utilizar as constantes definidas no graphviewer.h para conveniência.
 	 */
-	bool setVertexColor(unsigned long id, string color);
+	bool setVertexColor(int id, string color);
 
 	/**
 	 * Função que define o tamanho de um nó.
@@ -198,7 +198,7 @@ public:
 	 * @param id Identificador único do nó com o tamanho a alterar.
 	 * @param size Novo tamanho do nó.
 	 */
-	bool setVertexSize(unsigned long id, int size);
+	bool setVertexSize(int id, int size);
 
 	/**
 	 * Função que define um ícone para um nó.
@@ -208,7 +208,7 @@ public:
 	 * @param id Identificador único do nó com o ícone a alterar.
 	 * @param filepath Caminho do ficheiro a utilizar como novo ícone do nó.
 	 */
-	bool setVertexIcon(unsigned long id, string filepath);
+	bool setVertexIcon(int id, string filepath);
 
 	/**
 	 * Função que define a espessura de uma aresta.
@@ -219,7 +219,7 @@ public:
 	 * @param thickness Nova espessura da aresta, sendo que por base, as
 	 * arestas são criadas com a espessura de 1.
 	 */
-	bool setEdgeThickness(unsigned long id, int thickness);
+	bool setEdgeThickness(int id, int thickness);
 
 	/**
 	 * Função que define o peso de uma aresta na representação do grafo, a ser visualizado
@@ -230,7 +230,7 @@ public:
 	 * @param id Identificador único da aresta a modificar.
 	 * @param weight Peso associado à aresta.
 	 */
-	bool setEdgeWeight(unsigned long id, int weight);
+	bool setEdgeWeight(int id, int weight);
 
 	/**
 	 * Função que define o fluxo de uma aresta na representação do grafo, a ser visualizado
@@ -241,7 +241,7 @@ public:
 	 * @param id Identificador único da aresta a modificar.
 	 * @param flow Fluxo associado à aresta.
 	 */
-	bool setEdgeFlow(unsigned long id, int flow);
+	bool setEdgeFlow(int id, int flow);
 
 	/**
 	 * Função que define se as arestas do grafo serão desenhadas como curvas ou retas.

@@ -373,7 +373,6 @@ void createPickRoute(GarbageCentral& gc){
 	}
 
 
-
 	if (failed.size() != 0)
 	{
 		cout << "\n\nNo optimal route found for these containers:" << endl;
@@ -384,7 +383,8 @@ void createPickRoute(GarbageCentral& gc){
 
 	cout << flush;
 
-	displayGraphViewer(route, gc);
+	if (! route.empty() )
+		displayGraphViewer(route, gc);
 }
 
 

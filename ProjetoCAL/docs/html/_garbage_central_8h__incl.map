@@ -1,0 +1,12 @@
+<map id="GarbageCentral.h" name="GarbageCentral.h">
+<area shape="rect" id="node2" href="$_garbage_deposit_8h.html" title="GarbageDeposit.h" alt="" coords="251,319,378,345"/>
+<area shape="rect" id="node6" href="$_exceptions_8h.html" title="Exceptions.h" alt="" coords="784,393,883,420"/>
+<area shape="rect" id="node7" href="$_treatment_plant_8h.html" title="TreatmentPlant.h" alt="" coords="43,244,165,271"/>
+<area shape="rect" id="node8" href="$_garbage_truck_8h.html" title="GarbageTruck.h" alt="" coords="493,80,608,107"/>
+<area shape="rect" id="node9" href="$utils_8h.html" title="utils.h" alt="" coords="555,162,613,189"/>
+<area shape="rect" id="node11" href="$_g_d_pointer_8h.html" title="GDPointer.h" alt="" coords="240,244,333,271"/>
+<area shape="rect" id="node12" href="$_road_pointer_8h.html" title="RoadPointer.h" alt="" coords="408,244,512,271"/>
+<area shape="rect" id="node13" href="$_road_8h.html" title="Road.h" alt="" coords="429,319,491,345"/>
+<area shape="rect" id="node16" href="$_reader_8h.html" title="Reader.h" alt="" coords="897,162,972,189"/>
+<area shape="rect" id="node23" href="$_graph_8h.html" title="Graph.h" alt="" coords="1154,80,1222,107"/>
+</map>

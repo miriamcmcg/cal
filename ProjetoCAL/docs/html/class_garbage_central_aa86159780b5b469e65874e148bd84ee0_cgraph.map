@@ -1,0 +1,5 @@
+<map id="GarbageCentral::GarbageCentral" name="GarbageCentral::GarbageCentral">
+<area shape="rect" id="node2" href="$class_graph.html#a26561e1350983eb73f2bf184c79ae4c0" title="Graph::addVertex" alt="" coords="264,5,388,32"/>
+<area shape="rect" id="node3" href="$class_graph.html#af8d6202573f0111ed568cecf4d48964b" title="Graph::addEdge" alt="" coords="268,56,384,83"/>
+<area shape="rect" id="node4" href="$class_vertex.html#a0e1cbb02c854fad10029bfaa79a13bb7" title="Vertex::addEdge" alt="" coords="436,56,555,83"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="updateCapacityOccupied" name="updateCapacityOccupied">
+<area shape="rect" id="node2" href="$class_garbage_central.html#a4e94d7e3ae98ce41608625e8f82d986b" title="GarbageCentral::listDeposits" alt="" coords="227,5,415,32"/>
+<area shape="rect" id="node3" href="$_interface_8cpp.html#ad1174fb5eca29d3ba00ebeef2e55ef04" title="getCursorXY" alt="" coords="589,107,684,133"/>
+<area shape="rect" id="node4" href="$_interface_8cpp.html#a4a4a5f6db7f5308eb8cfabe9ab802749" title="getEntry" alt="" coords="286,157,357,184"/>
+<area shape="rect" id="node6" href="$_interface_8cpp.html#ab078246aecda8d4b0b3235597292412d" title="clearline" alt="" coords="471,107,541,133"/>
+<area shape="rect" id="node7" href="$class_garbage_central.html#a8fa57e252fa5fdbc2d0bc9757a2b5587" title="GarbageCentral::hasDeposit" alt="" coords="229,208,414,235"/>
+<area shape="rect" id="node8" href="$class_garbage_central.html#a408923af929e799c59ea437050682235" title="GarbageCentral::updateDeposit\lOccupied" alt="" coords="220,259,423,301"/>
+<area shape="rect" id="node5" href="$_interface_8cpp.html#aa294b49bfcc17cf4b490fb020e359851" title="gotoXY" alt="" coords="605,183,668,209"/>
+</map>

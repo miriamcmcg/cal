@@ -1,0 +1,9 @@
+<map id="updateAvailableRoad" name="updateAvailableRoad">
+<area shape="rect" id="node2" href="$class_garbage_central.html#a176c2153af4c721e2c2e5614c9e2e5a7" title="GarbageCentral::listRoads" alt="" coords="203,5,378,32"/>
+<area shape="rect" id="node3" href="$_interface_8cpp.html#ad1174fb5eca29d3ba00ebeef2e55ef04" title="getCursorXY" alt="" coords="552,107,647,133"/>
+<area shape="rect" id="node4" href="$_interface_8cpp.html#a4a4a5f6db7f5308eb8cfabe9ab802749" title="getEntry" alt="" coords="255,157,326,184"/>
+<area shape="rect" id="node6" href="$_interface_8cpp.html#ab078246aecda8d4b0b3235597292412d" title="clearline" alt="" coords="433,107,504,133"/>
+<area shape="rect" id="node7" href="$class_garbage_central.html#afb4985d937e974a048ceff791199269b" title="GarbageCentral::hasRoad" alt="" coords="205,208,376,235"/>
+<area shape="rect" id="node8" href="$class_garbage_central.html#a4932c3884d17a0668a3b97919417fe52" title="GarbageCentral::updateRoad\lAvailable" alt="" coords="196,259,385,301"/>
+<area shape="rect" id="node5" href="$_interface_8cpp.html#aa294b49bfcc17cf4b490fb020e359851" title="gotoXY" alt="" coords="568,183,631,209"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="GarbageCentral::~GarbageCentral" name="GarbageCentral::~GarbageCentral">
+<area shape="rect" id="node2" href="$class_graph.html#a10598b61300603985cb5a5b06a1b1d02" title="Graph::myDijkstraShortestPath" alt="" coords="231,5,433,32"/>
+<area shape="rect" id="node3" href="$class_graph.html#a11d65d59dcd6c06f12c3723fccc8ac8a" title="Graph::getPath" alt="" coords="277,56,387,83"/>
+<area shape="rect" id="node4" href="$class_garbage_central.html#ab6b2ab0772d42cd2685149537d7887e3" title="GarbageCentral::convert" alt="" coords="251,107,413,133"/>
+<area shape="rect" id="node5" href="$class_garbage_deposit.html#aecd6a6d295834a4764cd9a8c476f44b2" title="GarbageDeposit::getCapacity\lOccupied" alt="" coords="481,99,673,141"/>
+</map>

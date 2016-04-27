@@ -1,0 +1,16 @@
+<map id="GarbageDeposit.h" name="GarbageDeposit.h">
+<area shape="rect" id="node2" href="$_garbage_central_8h.html" title="GarbageCentral.h" alt="" coords="164,304,287,331"/>
+<area shape="rect" id="node7" href="$_treatment_plant_8h.html" title="TreatmentPlant.h" alt="" coords="34,80,155,107"/>
+<area shape="rect" id="node9" href="$_g_d_pointer_8h.html" title="GDPointer.h" alt="" coords="212,80,305,107"/>
+<area shape="rect" id="node10" href="$utils_8h.html" title="utils.h" alt="" coords="369,155,426,181"/>
+<area shape="rect" id="node15" href="$_garbage_deposit_8cpp.html" title="GarbageDeposit.cpp" alt="" coords="381,80,521,107"/>
+<area shape="rect" id="node3" href="$_eco_points_8cpp.html" title="EcoPoints.cpp" alt="" coords="93,453,200,480"/>
+<area shape="rect" id="node4" href="$_interface_8h.html" title="Interface.h" alt="" coords="184,379,267,405"/>
+<area shape="rect" id="node6" href="$_garbage_central_8cpp.html" title="GarbageCentral.cpp" alt="" coords="291,379,429,405"/>
+<area shape="rect" id="node5" href="$_interface_8cpp.html" title="Interface.cpp" alt="" coords="224,453,320,480"/>
+<area shape="rect" id="node8" href="$_treatment_plant_8cpp.html" title="TreatmentPlant.cpp" alt="" coords="27,155,162,181"/>
+<area shape="rect" id="node14" href="$_g_d_pointer_8cpp.html" title="GDPointer.cpp" alt="" coords="237,155,344,181"/>
+<area shape="rect" id="node11" href="$_garbage_truck_8h.html" title="GarbageTruck.h" alt="" coords="381,229,496,256"/>
+<area shape="rect" id="node13" href="$_graph_8h.html" title="Graph.h" alt="" coords="289,229,357,256"/>
+<area shape="rect" id="node12" href="$_garbage_truck_8cpp.html" title="GarbageTruck.cpp" alt="" coords="375,304,503,331"/>
+</map>

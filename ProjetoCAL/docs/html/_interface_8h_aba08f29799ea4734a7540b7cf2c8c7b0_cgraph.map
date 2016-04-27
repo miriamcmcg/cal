@@ -1,0 +1,10 @@
+<map id="manualPicking" name="manualPicking">
+<area shape="rect" id="node2" href="$class_garbage_central.html#a4e94d7e3ae98ce41608625e8f82d986b" title="GarbageCentral::listDeposits" alt="" coords="165,5,353,32"/>
+<area shape="rect" id="node3" href="$_interface_8cpp.html#ad1174fb5eca29d3ba00ebeef2e55ef04" title="getCursorXY" alt="" coords="525,107,620,133"/>
+<area shape="rect" id="node4" href="$_interface_8cpp.html#a4a4a5f6db7f5308eb8cfabe9ab802749" title="getEntry" alt="" coords="224,132,295,159"/>
+<area shape="rect" id="node6" href="$_interface_8cpp.html#ab078246aecda8d4b0b3235597292412d" title="clearline" alt="" coords="407,208,477,235"/>
+<area shape="rect" id="node7" href="$class_garbage_central.html#a8fa57e252fa5fdbc2d0bc9757a2b5587" title="GarbageCentral::hasDeposit" alt="" coords="167,233,352,260"/>
+<area shape="rect" id="node8" href="$class_garbage_central.html#ae9cb689ed1c7b658ebf645b189e721ec" title="GarbageCentral::truckCanPick" alt="" coords="160,284,359,311"/>
+<area shape="rect" id="node9" href="$_interface_8cpp.html#a6a3ca153f0817e8ba91a023b886bb662" title="ClearScreen" alt="" coords="213,335,306,361"/>
+<area shape="rect" id="node5" href="$_interface_8cpp.html#aa294b49bfcc17cf4b490fb020e359851" title="gotoXY" alt="" coords="541,183,604,209"/>
+</map>

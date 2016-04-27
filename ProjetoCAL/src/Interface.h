@@ -12,10 +12,9 @@
 #include <iomanip>
 #include <cstdio>
 #include <unistd.h>
-#include <windows.h>
 #include "graphviewer.h"
 #include "GarbageCentral.h"
-
+#include <windows.h>
 
 #define IMG_WIDTH	2713
 #define	IMG_HEIGHT	1452
