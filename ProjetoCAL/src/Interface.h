@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include "graphviewer.h"
 #include "GarbageCentral.h"
+#include "matcher.h"
 #include <windows.h>
 
 #define IMG_WIDTH	2713
@@ -38,5 +39,7 @@ void updateCapacityOccupied(GarbageCentral& gc);
 void updateAvgSpeedRoad(GarbageCentral& gc);
 void updateAvailableRoad(GarbageCentral& gc);
 void displayGraphViewer(vector<Section> route, const GarbageCentral& gc);
+
+string askDriver(GarbageCentral& gc);
 
 #endif /* SRC_INTERFACE_H_ */

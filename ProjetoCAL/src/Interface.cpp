@@ -184,10 +184,11 @@ void mainMenu(GarbageCentral& gc){
 		cout << " 5 - Update deposit's capacity occupied" << endl;
 		cout << " 6 - Update speed on a road" << endl;
 		cout << " 7 - Update road's availability" << endl;
+		cout << " 8 - Display drivers list" << endl;
 		cout << " 0 - Exit Program" << endl << endl;
 
 		cout << "Choose an option: ";
-		getEntry(op, 0, 7);
+		getEntry(op, 0, 8);
 
 		ClearScreen();
 
@@ -216,6 +217,11 @@ void mainMenu(GarbageCentral& gc){
 			break;
 		case 7:
 			updateAvailableRoad(gc);
+			break;
+		case 8:
+			cout << "Drivers: " << endl << endl;
+			gc.listDrivers();
+			askDriver(gc);
 			break;
 		case 0:
 			return;
@@ -314,8 +320,9 @@ void createPickRoute(GarbageCentral& gc){
 		}
 	} while (!valid);
 
-	int op = 0;
+	// TODO askDriver, manda-lo para createPickingRoute, associa-lo ao truck
 
+	int op = 0;
 	cout << "Creating a picking route" << endl << endl;
 
 	cout << " 1 - Automatic" << endl;
@@ -543,6 +550,7 @@ void updateAvailableRoad(GarbageCentral& gc) {
 		gc.updateRoadAvailable(roadID, false);
 }
 
+
 void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 {
 	GraphViewer gv = GraphViewer(IMG_WIDTH, IMG_HEIGHT, false);
@@ -588,4 +596,40 @@ void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 			}
 		}
 	}
+}
+
+
+
+
+string askDriver(GarbageCentral& gc) {
+	string name;
+	int option;
+
+	cout << "Driver's name: ";
+	getline(cin, name);
+
+	vector<Driver> drivers = gc.searchDriversExact(name);
+
+	if (drivers.size() == 0)
+	{
+		Driver d = gc.searchDriverApproximate(name);
+
+		cout << "Did you mean: " << d.getName() << "?" << endl;
+		cout << "1 - Yes" << endl;
+		cout << "2 - No" << endl;
+
+		getEntry(option, 1, 2);
+
+		if (option == 2)
+			name = "";
+	}
+	else if (drivers.size() == 1)
+		cout << drivers[0].getName() << endl;
+	else {
+		for (auto d : drivers) {
+			cout << d.getName() << endl;
+		}
+	}
+
+	return name;
 }

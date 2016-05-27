@@ -18,6 +18,8 @@
 #include "GDPointer.h"
 #include "RoadPointer.h"
 #include "utils.h"
+#include "Driver.h"
+#include "matcher.h"
 #include <iomanip>
 #include <random>
 #include <vector>
@@ -43,8 +45,10 @@ private:
 	vector<GarbageTruck> trucks;
 	/** Vector of deposits */
 	vector<GarbageDeposit*> deposits;
-	/** Vector of roads*/
+	/** Vector of roads */
 	vector<Road*> roads;
+	/** Vector of drivers */
+	vector<Driver> drivers;
 	/** Central identifier */
 	TreatmentPlant* treat_plant;
 
@@ -248,6 +252,13 @@ public:
 	 * @return the maximum z coordinate
 	 */
 	double getMaxZ() const;
+
+
+
+	void listDrivers() const;
+	vector<Driver> searchDriversExact(string name);
+	Driver searchDriverApproximate(string name);
+
 
 	/**
 	 * test function

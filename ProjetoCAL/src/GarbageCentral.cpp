@@ -171,6 +171,7 @@ GarbageCentral::GarbageCentral() {
 	graph.addEdge(GDPointer(deposits[4]), GDPointer(deposits[5]), RoadPointer(roads[8]));
 
 
+	// Read trucks
 	ifstream in("trucks.txt");
 	int cap;
 	if (in.good()) {
@@ -178,6 +179,21 @@ GarbageCentral::GarbageCentral() {
 			trucks.push_back(GarbageTruck(cap));
 		}
 	}
+	in.close();
+
+
+	// Read drivers
+	in.open("drivers.txt");
+	string name;
+	if (in.good()) {
+		while (getline(in, name, ';')) {
+			drivers.push_back(Driver(name));
+
+			if (in.peek() == '\n')
+				in.ignore(1);
+		}
+	}
+	in.close();
 }
 
 
@@ -320,6 +336,8 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 	}
 
 
+
+	// Read trucks
 	ifstream in("trucks.txt");
 	int cap;
 	if (in.good()) {
@@ -327,6 +345,21 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 			trucks.push_back(GarbageTruck(cap));
 		}
 	}
+	in.close();
+
+
+	// Read drivers
+	in.open("drivers.txt");
+	string name;
+	if (in.good()) {
+		while (getline(in, name, ';')) {
+			drivers.push_back(Driver(name));
+
+			if (in.peek() == '\n')
+				in.ignore(1);
+		}
+	}
+	in.close();
 }
 
 
@@ -512,7 +545,7 @@ void GarbageCentral::listTrucks() const {
 	cout << " ---------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
 		cout << " " << setw(4) << trucks[i].getID()
-																																																																																																																																																																																																																	 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+																																																																																																																																																																																																																													 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
 	}
 }
 
@@ -528,9 +561,9 @@ void GarbageCentral::listDeposits() const {
 	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																																																																																																																																																																																																								<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
-																																																																																																																																																																																																								<< deposits[i]->getMaxCapacity() << " |" << setw(27)
-																																																																																																																																																																																																								<< deposits[i]->coordsString() << " |" << endl;
+																																																																																																																																																																																																																				<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																																																																																																																																																																																																																				<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																																																																																																																																																																																																																				<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
@@ -590,6 +623,52 @@ double GarbageCentral::getMaxY() const {
 double GarbageCentral::getMaxZ() const {
 	return maxZ;
 }
+
+
+
+void GarbageCentral::listDrivers() const {
+	cout << " " << setw(15) << "ID" << " |" <<  setw(50) << "Name" << " |" << endl;
+	cout << " ---------------------------------------------------------------------" << endl;
+	for (auto d : drivers){
+		cout << " " << setw(15) << d.getID() << " |"
+				<< setw(50) << d.getName() << " |\n";
+	}
+}
+
+
+vector<Driver> GarbageCentral::searchDriversExact(string name) {
+	vector<Driver> candidates;
+
+	for (auto driver : drivers) {
+		if (matches(driver.getName(), name))
+			candidates.push_back(driver);
+	}
+
+	return candidates;
+}
+
+
+Driver GarbageCentral::searchDriverApproximate(string name) {
+	ifstream in;
+	int min = 9999;
+	Driver approx;
+
+
+	for (auto driver : drivers) {
+		int distance = EditDistance(driver.getName(), name);
+
+		if (distance < min) {
+			min = distance;
+			approx = driver;
+		}
+	}
+
+	return approx;
+}
+
+
+
+
 
 
 

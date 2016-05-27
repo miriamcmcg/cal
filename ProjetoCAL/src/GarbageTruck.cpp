@@ -8,6 +8,7 @@ GarbageTruck::GarbageTruck(unsigned int capacity) {
 	this->ID = ++TruckCounter;
 	this->capacity = capacity;
 	this->carrying = 0;
+	this->driverID = 0;
 }
 
 

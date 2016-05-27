@@ -25,6 +25,8 @@ private:
 	unsigned int capacity;
 	/**The capacity that the truck is carrying */
 	unsigned int carrying;
+
+	int driverID;
 public:
 	/*
 	 * GarbageTruck constructor
