@@ -10,6 +10,7 @@
 
 #include "utils.h"
 #include "Exceptions.h"
+#include "Driver.h"
 #include <deque>
 
 /**
@@ -26,7 +27,8 @@ private:
 	/**The capacity that the truck is carrying */
 	unsigned int carrying;
 
-	int driverID;
+	Driver* driver;
+
 public:
 	/*
 	 * GarbageTruck constructor
@@ -64,6 +66,10 @@ public:
 	 * empty truck by putting the carrying value to 0
 	 */
 	void empty();
+
+	void updateDriver(Driver* driver);
+
+	Driver* getDriver() const;
 };
 
 

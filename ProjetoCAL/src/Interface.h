@@ -40,6 +40,6 @@ void updateAvgSpeedRoad(GarbageCentral& gc);
 void updateAvailableRoad(GarbageCentral& gc);
 void displayGraphViewer(vector<Section> route, const GarbageCentral& gc);
 
-string askDriver(GarbageCentral& gc);
+int askDriver(GarbageCentral& gc);
 
 #endif /* SRC_INTERFACE_H_ */

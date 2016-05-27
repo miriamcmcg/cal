@@ -187,7 +187,7 @@ GarbageCentral::GarbageCentral() {
 	string name;
 	if (in.good()) {
 		while (getline(in, name, ';')) {
-			drivers.push_back(Driver(name));
+			drivers.push_back(new Driver(name));
 
 			if (in.peek() == '\n')
 				in.ignore(1);
@@ -353,7 +353,7 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 	string name;
 	if (in.good()) {
 		while (getline(in, name, ';')) {
-			drivers.push_back(Driver(name));
+			drivers.push_back(new Driver(name));
 
 			if (in.peek() == '\n')
 				in.ignore(1);
@@ -440,15 +440,22 @@ void GarbageCentral::updateRoadAvailable(unsigned int roadID, bool available) {
 
 
 
-Data GarbageCentral::createPickingRoute(unsigned int truckID) {
+Data GarbageCentral::createPickingRoute(unsigned int truckID, unsigned int driverID) {
 
 	int pos = truckPosition(truckID);
 
 	if (pos == -1)
 		throw TruckNonExistent();
 
+	int driverPos = driverPosition(driverID);
+
+	if (driverPos == -1)
+		throw DriverNonExistent();
+
 	GarbageTruck &truck = trucks[pos];
 	truck.empty();
+	Driver* d = drivers[driverPos];
+	truck.updateDriver(d);
 	vector<GarbageDeposit*> to_pick = { treat_plant };
 	for (unsigned i = 0; i < deposits.size(); i++) {
 		unsigned int capOcup = deposits[i]->getCapacityOccupied();
@@ -483,7 +490,7 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID) {
 }
 
 
-Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id) {
+Data GarbageCentral::createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id, unsigned int driverID) {
 
 	int pos = truckPosition(truckID);
 
@@ -541,11 +548,10 @@ bool GarbageCentral::updateDepositOccupied(unsigned int depositID, unsigned int 
 
 
 void GarbageCentral::listTrucks() const {
-	cout << " " << setw(4) << "ID" << " |" <<  setw(13) << "Max Capacity" << " |" << endl;
-	cout << " ---------------------" << endl;
+	cout << " " << setw(4) << "ID" << " |" <<  setw(13) << "Max Capacity" << " |" << setw(30) << "Last Driver" << " |" <<  endl;
+	cout << " -----------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < trucks.size(); i++){
-		cout << " " << setw(4) << trucks[i].getID()
-																																																																																																																																																																																																																													 << " |" << setw(13) << trucks[i].getCapacity()<< " |" <<  endl;
+		cout << " " << setw(4) << trucks[i].getID() << " |" << setw(13) << trucks[i].getCapacity()<< " |" << setw(30) << trucks[i].getDriver()->getName() << " |" <<  endl;
 	}
 }
 
@@ -630,17 +636,17 @@ void GarbageCentral::listDrivers() const {
 	cout << " " << setw(15) << "ID" << " |" <<  setw(50) << "Name" << " |" << endl;
 	cout << " ---------------------------------------------------------------------" << endl;
 	for (auto d : drivers){
-		cout << " " << setw(15) << d.getID() << " |"
-				<< setw(50) << d.getName() << " |\n";
+		cout << " " << setw(15) << d->getID() << " |"
+				<< setw(50) << d->getName() << " |\n";
 	}
 }
 
 
-vector<Driver> GarbageCentral::searchDriversExact(string name) {
-	vector<Driver> candidates;
+vector<Driver*> GarbageCentral::searchDriversExact(string name) {
+	vector<Driver*> candidates;
 
 	for (auto driver : drivers) {
-		if (matches(driver.getName(), name))
+		if (matches(driver->getName(), name))
 			candidates.push_back(driver);
 	}
 
@@ -648,14 +654,13 @@ vector<Driver> GarbageCentral::searchDriversExact(string name) {
 }
 
 
-Driver GarbageCentral::searchDriverApproximate(string name) {
-	ifstream in;
+Driver* GarbageCentral::searchDriverApproximate(string name) {
 	int min = 9999;
-	Driver approx;
+	Driver* approx;
 
 
 	for (auto driver : drivers) {
-		int distance = EditDistance(driver.getName(), name);
+		int distance = EditDistance(driver->getName(), name);
 
 		if (distance < min) {
 			min = distance;
@@ -667,7 +672,42 @@ Driver GarbageCentral::searchDriverApproximate(string name) {
 }
 
 
+vector<Road*> GarbageCentral::searchRoadsExact(string name){
+	vector<Road*> candidates;
 
+	for(auto road : roads){
+		if(matches(road->getName(), name))
+			candidates.push_back(road);
+	}
+
+	return candidates;
+}
+
+Road* GarbageCentral::searchRoadApproximate(string name){
+	int min = 9999;
+	Road* approx;
+
+	for(auto road : roads){
+		int distance = EditDistance(road->getName(), name);
+
+		if(distance < min){
+			min = distance;
+			approx = road;
+		}
+	}
+	return approx;
+}
+
+unsigned int GarbageCentral::driverPosition(int driverID){
+	unsigned int pos = -1;
+	for (unsigned int  i = 0; i < drivers.size(); i++){
+		if (drivers[i]->getID() == driverID){
+			pos = i;
+			break;
+		}
+	}
+	return pos;
+}
 
 
 

@@ -320,7 +320,18 @@ void createPickRoute(GarbageCentral& gc){
 		}
 	} while (!valid);
 
-	// TODO askDriver, manda-lo para createPickingRoute, associa-lo ao truck
+	cout << endl;
+	gc.listDrivers();
+	cout << endl;
+
+	getCursorXY(x,y);
+	int driverID = askDriver(gc);
+
+	while(driverID == -1){
+		cout << "No valid Driver, insert again" << endl;
+		clearline(x,y);
+		driverID = askDriver(gc);
+	}
 
 	int op = 0;
 	cout << "Creating a picking route" << endl << endl;
@@ -340,7 +351,7 @@ void createPickRoute(GarbageCentral& gc){
 	switch(op){
 	case 1:
 		try{
-			data = gc.createPickingRoute(t);
+			data = gc.createPickingRoute(t, driverID);
 		}catch (RouteMissingData& e) {
 			cout << "Truck doesn't have enough capacity" << endl;
 			return;
@@ -349,7 +360,7 @@ void createPickRoute(GarbageCentral& gc){
 	case 2:
 		deposits_id = manualPicking(gc, t);
 		try{
-			data = gc.createPickingRoute(t, deposits_id);
+			data = gc.createPickingRoute(t, deposits_id, driverID);
 		}catch (RouteMissingData& e) {
 			cout << "Truck doesn't have enough capacity or info is missing" << endl;
 			return;
@@ -601,35 +612,43 @@ void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 
 
 
-string askDriver(GarbageCentral& gc) {
+int askDriver(GarbageCentral& gc) {
+	int driverID = -1;
 	string name;
-	int option;
 
 	cout << "Driver's name: ";
 	getline(cin, name);
 
-	vector<Driver> drivers = gc.searchDriversExact(name);
+	vector<Driver*> drivers = gc.searchDriversExact(name);
 
 	if (drivers.size() == 0)
 	{
-		Driver d = gc.searchDriverApproximate(name);
+		int option;
+		Driver* d = gc.searchDriverApproximate(name);
 
-		cout << "Did you mean: " << d.getName() << "?" << endl;
+		cout << "Did you mean: " << d->getName() << "?" << endl;
 		cout << "1 - Yes" << endl;
 		cout << "2 - No" << endl;
 
 		getEntry(option, 1, 2);
 
-		if (option == 2)
-			name = "";
-	}
-	else if (drivers.size() == 1)
-		cout << drivers[0].getName() << endl;
-	else {
-		for (auto d : drivers) {
-			cout << d.getName() << endl;
+		if (option == 1){
+			driverID = d->getID();
 		}
 	}
+	else if(drivers.size() > 1) {
+		for (unsigned int i = 0; i < drivers.size(); i++) {
+			cout << i+1 << " - " << drivers[i]->getName() << endl;
+		}
+		int op;
+		cout << "Insert Driver ID: " << endl;
+		getEntry(op, 1, (int) drivers.size());
+		driverID = drivers[op - 1]->getID();
+	}
+	else{
+		driverID = drivers[0]->getID();
+		cout << "Driver: " << drivers[0]->getName() << endl;
+	}
 
-	return name;
+	return driverID;
 }

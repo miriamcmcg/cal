@@ -8,7 +8,7 @@ GarbageTruck::GarbageTruck(unsigned int capacity) {
 	this->ID = ++TruckCounter;
 	this->capacity = capacity;
 	this->carrying = 0;
-	this->driverID = 0;
+	this->driver = new Driver();
 }
 
 
@@ -36,4 +36,12 @@ bool GarbageTruck::addCarrying(unsigned int quantity) {
 
 void GarbageTruck::empty(){
 	carrying = 0;
+}
+
+void GarbageTruck::updateDriver(Driver* driver){
+	this->driver = driver;
+}
+
+Driver* GarbageTruck::getDriver() const{
+	return driver;
 }

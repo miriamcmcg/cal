@@ -48,7 +48,7 @@ private:
 	/** Vector of roads */
 	vector<Road*> roads;
 	/** Vector of drivers */
-	vector<Driver> drivers;
+	vector<Driver*> drivers;
 	/** Central identifier */
 	TreatmentPlant* treat_plant;
 
@@ -136,7 +136,7 @@ public:
 	 * create a route taking into consideration the capacity of the truck
 	 * if the truck does not exist throws a TruckNonExistent exception type
 	 */
-	Data createPickingRoute(unsigned int truckID);
+	Data createPickingRoute(unsigned int truckID, unsigned int driverID);
 	/**
 	 * createPickingRoute function
 	 * @param truckID identifier of the truck that will pick the containers of the route created
@@ -145,7 +145,7 @@ public:
 	 * create a manual route that cover the containers of the vector
 	 * if the truck does not exist throws a TruckNonExistent exception type
 	 */
-	Data createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id);
+	Data createPickingRoute(unsigned int truckID, vector<unsigned int> deposits_id, unsigned int driverID);
 	/**
 	 * updateDepositOccupied function
 	 * @param depositID identifier of the container that will be updated
@@ -256,8 +256,11 @@ public:
 
 
 	void listDrivers() const;
-	vector<Driver> searchDriversExact(string name);
-	Driver searchDriverApproximate(string name);
+	vector<Driver*> searchDriversExact(string name);
+	Driver* searchDriverApproximate(string name);
+	vector<Road*> searchRoadsExact(string name);
+	Road* searchRoadApproximate(string name);
+	unsigned int driverPosition(int driverID);
 
 
 	/**
