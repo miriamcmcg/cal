@@ -885,33 +885,42 @@ void GarbageCentral::test() {
 
 
 
-	cout << "--------------------------------------------\n";
+//	cout << "--------------------------------------------\n";
+//
+//	Data data = getRoute(to_pick);
+//
+//	auto route = data.first;
+//	auto failed = data.second;
+//
+//	if (! route.empty()) {
+//		cout << route[0].first[0]->print();
+//		for (unsigned i = 0; i < route.size(); i++) {
+//			auto info = route[i].first;
+//			auto roads = route[i].second;
+//
+//			for (unsigned j = 0; j < roads.size(); j++) {
+//				cout << "  --->  " << roads[j]->print();
+//				cout << "  --->  " << info[j+1]->print();
+//			}
+//		}
+//	}
+//
+//	if (failed.size() != 0)
+//	{
+//		cout << "\n\nNo optimal route found for these containers:" << endl;
+//		for(unsigned int i = 0; i < failed.size(); i++){
+//			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
+//		}
+//	}
 
-	Data data = getRoute(to_pick);
+	updateRoadAvailable(1,false);
+	addRoad(0);
+	vector<GDPointer> gds = graph.dfs();
 
-	auto route = data.first;
-	auto failed = data.second;
-
-	if (! route.empty()) {
-		cout << route[0].first[0]->print();
-		for (unsigned i = 0; i < route.size(); i++) {
-			auto info = route[i].first;
-			auto roads = route[i].second;
-
-			for (unsigned j = 0; j < roads.size(); j++) {
-				cout << "  --->  " << roads[j]->print();
-				cout << "  --->  " << info[j+1]->print();
-			}
-		}
+	for (auto gd : gds){
+		cout << gd.getPointer()->getID() << endl;
 	}
 
-	if (failed.size() != 0)
-	{
-		cout << "\n\nNo optimal route found for these containers:" << endl;
-		for(unsigned int i = 0; i < failed.size(); i++){
-			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
-		}
-	}
 }
 
 

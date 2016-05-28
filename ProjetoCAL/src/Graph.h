@@ -338,7 +338,7 @@ vector<T> Graph<T,V>::dfs() const {
 	vector<T> res;
 	it=vertexSet.begin();
 	for (; it !=ite; it++)
-		if ( (*it)->visited==false )
+		if ( (*it)->visited==false)
 			dfs(*it,res);
 
 	return res;
@@ -916,13 +916,14 @@ void Graph<T,V>::addNode(T n, const V &in, const V &out) {
 			break;
 	}
 
-	removeEdge(vertex->info, edge.dest->info);
 	n.setPosition(vertex->info, edge.dest->info);
-
 	addVertex(n);
 
-	addEdge(n, edge.dest->info, out);
+	removeEdge(vertex->info, edge.dest->info);
+
 	addEdge(vertex->info, n, edge.info);
+
+	addEdge(n, edge.dest->info, out);
 }
 
 #endif /* GRAPH_H_ */

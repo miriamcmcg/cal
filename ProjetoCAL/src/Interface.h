@@ -39,6 +39,7 @@ void updateCapacityOccupied(GarbageCentral& gc);
 void updateAvgSpeedRoad(GarbageCentral& gc);
 void updateAvailableRoad(GarbageCentral& gc);
 void displayGraphViewer(vector<Section> route, const GarbageCentral& gc);
+void addNewContainer(GarbageCentral& gc);
 
 unsigned long askDriver(GarbageCentral& gc);
 unsigned long askRoad(GarbageCentral& gc);

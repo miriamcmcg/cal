@@ -185,10 +185,11 @@ void mainMenu(GarbageCentral& gc){
 		cout << " 6 - Update speed on a road" << endl;
 		cout << " 7 - Update road's availability" << endl;
 		cout << " 8 - Display drivers list" << endl;
+		cout << " 9 - Add new container" << endl;
 		cout << " 0 - Exit Program" << endl << endl;
 
 		cout << "Choose an option: ";
-		getEntry(op, 0, 8);
+		getEntry(op, 0, 9);
 
 		ClearScreen();
 
@@ -223,6 +224,9 @@ void mainMenu(GarbageCentral& gc){
 			cout << "Drivers: " << endl << endl;
 			gc.listDrivers();
 			askDriver(gc);
+			break;
+		case 9:
+			addNewContainer(gc);
 			break;
 		case 0:
 			return;
@@ -616,42 +620,49 @@ void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 unsigned long askDriver(GarbageCentral& gc) {
 	unsigned long driverID;
 	string name;
+	bool valid = false;
 
-	cout << "Driver's name: ";
-	getline(cin, name);
+	do{
+		cout << "Driver's name: ";
+		getline(cin, name);
 
-	vector<Driver*> drivers = gc.searchDriversExact(name);
+		vector<Driver*> drivers = gc.searchDriversExact(name);
 
-	if (drivers.size() == 0)
-	{
-		int option;
-		Driver* d = gc.searchDriverApproximate(name);
+		if (drivers.size() == 0)
+		{
+			int option;
 
-		cout << "Did you mean: " << d->getName() << "?" << endl;
-		cout << "1 - Yes" << endl;
-		cout << "2 - No" << endl;
+			Driver* d = gc.searchDriverApproximate(name);
 
-		getEntry(option, 1, 2);
+			cout << "Did you mean: " << d->getName() << "?" << endl;
+			cout << "1 - Yes" << endl;
+			cout << "2 - No" << endl;
 
-		if (option == 1){
-			driverID = d->getID();
+			getEntry(option, 1, 2);
+
+			if (option == 1){
+				valid = true;
+				driverID = d->getID();
+			}
 		}
-	}
-	else if(drivers.size() > 1) {
-		for (unsigned int i = 0; i < drivers.size(); i++) {
-			cout << i+1 << " - " << drivers[i]->getName() << endl;
-		}
+		else if(drivers.size() > 1) {
+			for (unsigned int i = 0; i < drivers.size(); i++) {
+				cout << i+1 << " - " << drivers[i]->getName() << endl;
+			}
 
-		int op;
-		cout << "Which driver?" << endl;
-		cout << "Option: ";
-		getEntry(op, 1, (int) drivers.size());
-		driverID = drivers[op - 1]->getID();
-	}
-	else{
-		driverID = drivers[0]->getID();
-		cout << "Driver: " << drivers[0]->getName() << endl;
-	}
+			int op;
+			cout << "Which driver?" << endl;
+			cout << "Option: ";
+			getEntry(op, 1, (int) drivers.size());
+			driverID = drivers[op - 1]->getID();
+			valid = true;
+		}
+		else{
+			driverID = drivers[0]->getID();
+			cout << "Driver: " << drivers[0]->getName() << endl;
+			valid = true;
+		}
+	}while(!valid);
 
 	return driverID;
 }
@@ -660,53 +671,57 @@ unsigned long askDriver(GarbageCentral& gc) {
 unsigned long askRoad(GarbageCentral& gc) {
 	unsigned long roadID;
 	string name;
+	bool valid = false;
 
-	cout << "Road's name: ";
-	getline(cin, name);
+	do{
+		cout << "Road's name: ";
+		getline(cin, name);
 
-	vector<Road*> roads = gc.searchRoadsExact(name);
+		vector<Road*> roads = gc.searchRoadsExact(name);
 
-	if (roads.size() == 0)
-	{
-		int option;
-		Road* r = gc.searchRoadApproximate(name);
+		if (roads.size() == 0)
+		{
+			int option;
+			Road* r = gc.searchRoadApproximate(name);
 
-		cout << "Did you mean: " << r->getName() << "?" << endl;
-		cout << "1 - Yes" << endl;
-		cout << "2 - No" << endl;
+			cout << "Did you mean: " << r->getName() << "?" << endl;
+			cout << "1 - Yes" << endl;
+			cout << "2 - No" << endl;
 
-		getEntry(option, 1, 2);
+			getEntry(option, 1, 2);
 
-		if (option == 1){
-			roadID = r->getID();
-		}
-	}
-	else if(roads.size() > 1) {
-		vector<Road*> grouped = groupRoadsByName(roads);
-
-		if (grouped.size() > 1) {
-			for (unsigned int i = 0; i < grouped.size(); i++) {
-				cout << i+1 << " - " << grouped[i]->getName() << endl;
+			if (option == 1){
+				roadID = r->getID();
+				valid = true;
 			}
-
-			int op;
-			cout << "Which Road?" << endl;
-			cout << "Option: ";
-			getEntry(op, 1, (int) grouped.size());
-			roadID = roads[op - 1]->getID();
 		}
-		else {
-			roadID = grouped[0]->getID();
-			cout << "Road: " << grouped[0]->getName() << endl;
+		else if(roads.size() > 1) {
+			vector<Road*> grouped = groupRoadsByName(roads);
+
+			if (grouped.size() > 1) {
+				for (unsigned int i = 0; i < grouped.size(); i++) {
+					cout << i+1 << " - " << grouped[i]->getName() << endl;
+				}
+
+				int op;
+				cout << "Which Road?" << endl;
+				cout << "Option: ";
+				getEntry(op, 1, (int) grouped.size());
+				roadID = roads[op - 1]->getID();
+				valid = true;
+			}
+			else {
+				roadID = grouped[0]->getID();
+				cout << "Road: " << grouped[0]->getName() << endl;
+				valid = true;
+			}
 		}
-	}
-	else{
-		roadID = roads[0]->getID();
-		cout << "Road: " << roads[0]->getName() << endl;
-	}
-
-
-	gc.addRoad(roadID);
+		else{
+			roadID = roads[0]->getID();
+			cout << "Road: " << roads[0]->getName() << endl;
+			valid = true;
+		}
+	}while(!valid);
 
 	return roadID;
 }
@@ -730,4 +745,12 @@ vector<Road*> groupRoadsByName(const vector<Road *>& roads) {
 	}
 
 	return grouped;
+}
+
+void addNewContainer(GarbageCentral& gc){
+	cout << endl << "Roads: " << endl;
+	gc.listRoads();
+	cout << endl;
+
+	gc.addRoad(askRoad(gc));
 }
