@@ -28,7 +28,7 @@ public:
 	 * getPointer function
 	 * @return pointer to garbage deposit
 	 */
-	GarbageDeposit *getPointer();
+	GarbageDeposit *getPointer() const;
 	/**
 	 * operator equal
 	 * @param gd garbage deposit pointer
@@ -44,6 +44,7 @@ public:
 	 */
 	bool operator!=(const GDPointer &gd) const;
 
+	void setPosition(const GDPointer &gd1, const GDPointer &gd2);
 };
 
 

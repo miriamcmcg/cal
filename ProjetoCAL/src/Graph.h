@@ -159,6 +159,7 @@ class Edge {
 	Vertex<T,V> * dest;
 	V info;
 public:
+	Edge() {};
 	Edge(Vertex<T,V> *d, V in);
 	double getWeight();
 	friend class Graph<T,V>;
@@ -220,6 +221,8 @@ public:
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest);
 	void myDijkstraShortestPath(const T &s);
 	bool myDijkstraShortestPath(const T &s, const T &d);
+
+	void addNode(T n, const V &e1, const V &e2);
 };
 
 
@@ -889,6 +892,37 @@ vector<T> Graph<T,V>::getfloydWarshallPath(const T &origin, const T &dest) {
 	}
 
 	return res;
+}
+
+
+template <class T, class V>
+void Graph<T,V>::addNode(T n, const V &in, const V &out) {
+	Vertex<T,V>* vertex;
+	Edge<T,V> edge;
+
+	for (auto v : vertexSet) {
+		bool found = false;
+
+		for (auto e : v->adj) {
+			if (e.info == in) {
+				vertex = v;
+				edge = e;
+				found = true;
+				break;
+			}
+		}
+
+		if (found)
+			break;
+	}
+
+	removeEdge(vertex->info, edge.dest->info);
+	n.setPosition(vertex->info, edge.dest->info);
+
+	addVertex(n);
+
+	addEdge(n, edge.dest->info, out);
+	addEdge(vertex->info, n, edge.info);
 }
 
 #endif /* GRAPH_H_ */

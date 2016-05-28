@@ -40,6 +40,8 @@ void updateAvgSpeedRoad(GarbageCentral& gc);
 void updateAvailableRoad(GarbageCentral& gc);
 void displayGraphViewer(vector<Section> route, const GarbageCentral& gc);
 
-int askDriver(GarbageCentral& gc);
+unsigned long askDriver(GarbageCentral& gc);
+unsigned long askRoad(GarbageCentral& gc);
+vector<Road*> groupRoadsByName(const vector<Road *>& roads);
 
 #endif /* SRC_INTERFACE_H_ */

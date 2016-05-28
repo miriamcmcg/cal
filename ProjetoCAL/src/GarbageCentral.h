@@ -256,11 +256,23 @@ public:
 
 
 	void listDrivers() const;
+
 	vector<Driver*> searchDriversExact(string name);
+
 	Driver* searchDriverApproximate(string name);
+
 	vector<Road*> searchRoadsExact(string name);
+
 	Road* searchRoadApproximate(string name);
+
 	unsigned int driverPosition(int driverID);
+
+	void addRoad(unsigned long roadID);
+
+	unsigned long searchAvailableRoadID();
+
+	unsigned long searchAvailableDepositID();
+
 
 
 	/**

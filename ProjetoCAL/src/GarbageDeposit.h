@@ -124,10 +124,15 @@ public:
 	string coordsString();
 
 	/**
-		 * print function
-		 * @return the string of the identifier of the GarbageDeposit to print
-		 */
+	 * print function
+	 * @return the string of the identifier of the GarbageDeposit to print
+	 */
 	virtual string print() const;
+
+
+	void setX(double X);
+	void setY(double Y);
+	void setZ(double Z);
 };
 
 

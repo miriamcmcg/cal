@@ -59,3 +59,7 @@ double Road::getDistance() const{
 double Road::getAvgSpeed() const{
 	return avg_speed;
 }
+
+void Road::setDistance(double distance) {
+	this->distance = distance;
+}

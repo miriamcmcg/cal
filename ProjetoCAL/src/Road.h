@@ -95,6 +95,8 @@ public:
 	 *@return average speed of the road
 	 */
 	double getAvgSpeed() const;
+
+	void setDistance(double distance);
 };
 
 

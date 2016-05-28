@@ -454,8 +454,10 @@ Data GarbageCentral::createPickingRoute(unsigned int truckID, unsigned int drive
 
 	GarbageTruck &truck = trucks[pos];
 	truck.empty();
+
 	Driver* d = drivers[driverPos];
 	truck.updateDriver(d);
+
 	vector<GarbageDeposit*> to_pick = { treat_plant };
 	for (unsigned i = 0; i < deposits.size(); i++) {
 		unsigned int capOcup = deposits[i]->getCapacityOccupied();
@@ -710,6 +712,64 @@ unsigned int GarbageCentral::driverPosition(int driverID){
 }
 
 
+
+void GarbageCentral::addRoad(unsigned long roadID) {
+	unsigned long ID;
+	string name;
+	double distance, speed;
+
+	int pos = roadPosition(roadID);
+
+	if (pos == -1)
+		throw RoadNonExistent();
+
+
+	name = roads[pos]->getName();
+	ID = searchAvailableRoadID();
+
+	distance = roads[pos]->getDistance() / 2;
+	roads[pos]->setDistance(roads[pos]->getDistance() / 2);
+
+	speed = roads[pos]->getAvgSpeed();
+
+	Road* r = new Road(ID, name, distance, speed);
+	roads.push_back(r);
+
+	GarbageDeposit* gd = new GarbageDeposit(searchAvailableDepositID(), 0, 0, 0, 8000, 0);
+	deposits.push_back(gd);
+
+	graph.addNode(GDPointer(gd), RoadPointer(roads[pos]), RoadPointer(r));
+}
+
+
+unsigned long GarbageCentral::searchAvailableRoadID() {
+	bool valid = false;
+	int ID = -1;
+
+	while (!valid) {
+		ID = (rand() % 100000) + 1;
+
+		if (roadPosition(ID) == -1)
+			valid = true;
+	}
+
+	return ID;
+}
+
+
+unsigned long GarbageCentral::searchAvailableDepositID() {
+	bool valid = false;
+	int ID = -1;
+
+	while (!valid) {
+		ID = (rand() % 100000) + 1;
+
+		if (depositPosition(ID) == -1)
+			valid = true;
+	}
+
+	return ID;
+}
 
 
 void GarbageCentral::test() {

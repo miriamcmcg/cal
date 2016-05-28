@@ -91,3 +91,16 @@ string GarbageDeposit::print() const {
 	ss << ID;
 	return ss.str();
 }
+
+
+void GarbageDeposit::setX(double X) {
+	this->x = x;
+}
+
+void GarbageDeposit::setY(double Y) {
+	this->y = y;
+}
+
+void GarbageDeposit::setZ(double Z) {
+	this->z = z;
+}

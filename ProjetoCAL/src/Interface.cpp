@@ -208,6 +208,7 @@ void mainMenu(GarbageCentral& gc){
 		case 4:
 			cout << "Streets: " << endl << endl;
 			gc.listRoads();
+			askRoad(gc);
 			break;
 		case 5:
 			updateCapacityOccupied(gc);
@@ -612,8 +613,8 @@ void displayGraphViewer(vector<Section> route, const GarbageCentral& gc)
 
 
 
-int askDriver(GarbageCentral& gc) {
-	int driverID = -1;
+unsigned long askDriver(GarbageCentral& gc) {
+	unsigned long driverID;
 	string name;
 
 	cout << "Driver's name: ";
@@ -640,8 +641,10 @@ int askDriver(GarbageCentral& gc) {
 		for (unsigned int i = 0; i < drivers.size(); i++) {
 			cout << i+1 << " - " << drivers[i]->getName() << endl;
 		}
+
 		int op;
-		cout << "Insert Driver ID: " << endl;
+		cout << "Which driver?" << endl;
+		cout << "Option: ";
 		getEntry(op, 1, (int) drivers.size());
 		driverID = drivers[op - 1]->getID();
 	}
@@ -651,4 +654,80 @@ int askDriver(GarbageCentral& gc) {
 	}
 
 	return driverID;
+}
+
+
+unsigned long askRoad(GarbageCentral& gc) {
+	unsigned long roadID;
+	string name;
+
+	cout << "Road's name: ";
+	getline(cin, name);
+
+	vector<Road*> roads = gc.searchRoadsExact(name);
+
+	if (roads.size() == 0)
+	{
+		int option;
+		Road* r = gc.searchRoadApproximate(name);
+
+		cout << "Did you mean: " << r->getName() << "?" << endl;
+		cout << "1 - Yes" << endl;
+		cout << "2 - No" << endl;
+
+		getEntry(option, 1, 2);
+
+		if (option == 1){
+			roadID = r->getID();
+		}
+	}
+	else if(roads.size() > 1) {
+		vector<Road*> grouped = groupRoadsByName(roads);
+
+		if (grouped.size() > 1) {
+			for (unsigned int i = 0; i < grouped.size(); i++) {
+				cout << i+1 << " - " << grouped[i]->getName() << endl;
+			}
+
+			int op;
+			cout << "Which Road?" << endl;
+			cout << "Option: ";
+			getEntry(op, 1, (int) grouped.size());
+			roadID = roads[op - 1]->getID();
+		}
+		else {
+			roadID = grouped[0]->getID();
+			cout << "Road: " << grouped[0]->getName() << endl;
+		}
+	}
+	else{
+		roadID = roads[0]->getID();
+		cout << "Road: " << roads[0]->getName() << endl;
+	}
+
+
+	gc.addRoad(roadID);
+
+	return roadID;
+}
+
+
+
+vector<Road*> groupRoadsByName(const vector<Road *>& roads) {
+	vector<Road*> grouped;
+
+	grouped.push_back(roads[0]);
+
+	for (unsigned i = 1; i < roads.size(); i++) {
+		for (unsigned j = 0; j < grouped.size(); j++) {
+			if (roads[i]->getName() == grouped[j]->getName()) {
+				break;
+			}
+
+			if (j == grouped.size() - 1)
+				grouped.push_back(roads[i]);
+		}
+	}
+
+	return grouped;
 }
