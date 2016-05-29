@@ -43,7 +43,7 @@ public:
 	 * @param capacity occupied of GarbageDeposit, 0 default value
 	 */
 	GarbageDeposit(unsigned long ID, double x, double y, double z,
-			unsigned int maxCapacity = 4500, unsigned capacityOccupied = 0);
+			unsigned int maxCapacity, unsigned capacityOccupied = 0);
 	/**
 	 * GarbageDeposit  destructor
 	 */

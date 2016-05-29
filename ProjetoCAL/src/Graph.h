@@ -919,11 +919,9 @@ void Graph<T,V>::addNode(T n, const V &in, const V &out) {
 	n.setPosition(vertex->info, edge.dest->info);
 	addVertex(n);
 
-	removeEdge(vertex->info, edge.dest->info);
-
 	addEdge(vertex->info, n, edge.info);
-
 	addEdge(n, edge.dest->info, out);
+	removeEdge(vertex->info, edge.dest->info);
 }
 
 #endif /* GRAPH_H_ */

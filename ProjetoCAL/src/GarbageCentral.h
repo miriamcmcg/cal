@@ -267,7 +267,7 @@ public:
 
 	unsigned int driverPosition(int driverID);
 
-	void addRoad(unsigned long roadID);
+	void addRoad(unsigned long roadID, unsigned int capacity);
 
 	unsigned long searchAvailableRoadID();
 

@@ -219,7 +219,10 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 		maxY = it_node1->y;
 		maxZ = it_node1->y;
 
-		deposits.push_back(new GarbageDeposit(it_node2->node_id, it_node2->x, it_node2->y, it_node2->z));
+		unsigned maxCapacity = 7000 + (rand() % 101);
+		unsigned capacityOccupied = rand() % maxCapacity;
+		deposits.push_back(new GarbageDeposit(it_node2->node_id, it_node2->x, it_node2->y, it_node2->z,
+				maxCapacity, capacityOccupied));
 		GDPointer gd2 = GDPointer(deposits[0]);
 		graph.addVertex(gd2);
 
@@ -261,8 +264,10 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 			int pos;
 			pos = depositPosition(it_node1->node_id);
 			if (pos == -1) {
+				unsigned maxCapacity = 7000 + (rand() % 101);
+				unsigned capacityOccupied = rand() % maxCapacity;
 				deposits.push_back(new GarbageDeposit(it_node1->node_id,
-						it_node1->x, it_node1->y, it_node1->z));
+						it_node1->x, it_node1->y, it_node1->z, maxCapacity, capacityOccupied));
 
 				pos = deposits.size() - 1;
 			}
@@ -289,8 +294,10 @@ GarbageCentral::GarbageCentral(const Reader& r) {
 
 			pos = depositPosition(it_node2->node_id);
 			if (pos == -1) {
+				unsigned maxCapacity = 7000 + (rand() % 101);
+				unsigned capacityOccupied = rand() % maxCapacity;
 				deposits.push_back(new GarbageDeposit(it_node2->node_id,
-						it_node2->x, it_node2->y, it_node2->z));
+						it_node2->x, it_node2->y, it_node2->z, maxCapacity, capacityOccupied));
 				pos = deposits.size() - 1;
 			}
 
@@ -569,9 +576,9 @@ void GarbageCentral::listDeposits() const {
 	cout << " ------------------------------------------------------------------------------" << endl;
 	for (unsigned int i = 0; i < deposits.size(); i++){
 		cout << " " << setw(15) << deposits[i]->getID() << " |" << setw(15)
-																																																																																																																																																																																																																				<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
-																																																																																																																																																																																																																				<< deposits[i]->getMaxCapacity() << " |" << setw(27)
-																																																																																																																																																																																																																				<< deposits[i]->coordsString() << " |" << endl;
+																																																																																																																																																																																																																								<< deposits[i]->getCapacityOccupied() << " |" << setw(13)
+																																																																																																																																																																																																																								<< deposits[i]->getMaxCapacity() << " |" << setw(27)
+																																																																																																																																																																																																																								<< deposits[i]->coordsString() << " |" << endl;
 	}
 }
 
@@ -713,7 +720,7 @@ unsigned int GarbageCentral::driverPosition(int driverID){
 
 
 
-void GarbageCentral::addRoad(unsigned long roadID) {
+void GarbageCentral::addRoad(unsigned long roadID, unsigned int capacity) {
 	unsigned long ID;
 	string name;
 	double distance, speed;
@@ -735,7 +742,7 @@ void GarbageCentral::addRoad(unsigned long roadID) {
 	Road* r = new Road(ID, name, distance, speed);
 	roads.push_back(r);
 
-	GarbageDeposit* gd = new GarbageDeposit(searchAvailableDepositID(), 0, 0, 0, 8000, 0);
+	GarbageDeposit* gd = new GarbageDeposit(searchAvailableDepositID(), 0, 0, 0, capacity);
 	deposits.push_back(gd);
 
 	graph.addNode(GDPointer(gd), RoadPointer(roads[pos]), RoadPointer(r));
@@ -885,42 +892,33 @@ void GarbageCentral::test() {
 
 
 
-//	cout << "--------------------------------------------\n";
-//
-//	Data data = getRoute(to_pick);
-//
-//	auto route = data.first;
-//	auto failed = data.second;
-//
-//	if (! route.empty()) {
-//		cout << route[0].first[0]->print();
-//		for (unsigned i = 0; i < route.size(); i++) {
-//			auto info = route[i].first;
-//			auto roads = route[i].second;
-//
-//			for (unsigned j = 0; j < roads.size(); j++) {
-//				cout << "  --->  " << roads[j]->print();
-//				cout << "  --->  " << info[j+1]->print();
-//			}
-//		}
-//	}
-//
-//	if (failed.size() != 0)
-//	{
-//		cout << "\n\nNo optimal route found for these containers:" << endl;
-//		for(unsigned int i = 0; i < failed.size(); i++){
-//			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
-//		}
-//	}
-
-	updateRoadAvailable(1,false);
-	addRoad(0);
-	vector<GDPointer> gds = graph.dfs();
-
-	for (auto gd : gds){
-		cout << gd.getPointer()->getID() << endl;
-	}
-
+	//	cout << "--------------------------------------------\n";
+	//
+	//	Data data = getRoute(to_pick);
+	//
+	//	auto route = data.first;
+	//	auto failed = data.second;
+	//
+	//	if (! route.empty()) {
+	//		cout << route[0].first[0]->print();
+	//		for (unsigned i = 0; i < route.size(); i++) {
+	//			auto info = route[i].first;
+	//			auto roads = route[i].second;
+	//
+	//			for (unsigned j = 0; j < roads.size(); j++) {
+	//				cout << "  --->  " << roads[j]->print();
+	//				cout << "  --->  " << info[j+1]->print();
+	//			}
+	//		}
+	//	}
+	//
+	//	if (failed.size() != 0)
+	//	{
+	//		cout << "\n\nNo optimal route found for these containers:" << endl;
+	//		for(unsigned int i = 0; i < failed.size(); i++){
+	//			cout << " " << i + 1 << ". " << failed[i]->getID()<< endl;
+	//		}
+	//	}
 }
 
 

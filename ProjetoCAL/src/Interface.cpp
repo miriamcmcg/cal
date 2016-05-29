@@ -223,7 +223,6 @@ void mainMenu(GarbageCentral& gc){
 		case 8:
 			cout << "Drivers: " << endl << endl;
 			gc.listDrivers();
-			askDriver(gc);
 			break;
 		case 9:
 			addNewContainer(gc);
@@ -752,5 +751,12 @@ void addNewContainer(GarbageCentral& gc){
 	gc.listRoads();
 	cout << endl;
 
-	gc.addRoad(askRoad(gc));
+	cout << "Please choose the road where the deposit will be placed\n";
+	int roadID = askRoad(gc);
+
+	unsigned int maxCapacity;
+	cout << "Capacity of the new container: ";
+	getEntry(maxCapacity);
+
+	gc.addRoad(roadID, maxCapacity);
 }

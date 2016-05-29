@@ -13,13 +13,7 @@ GarbageDeposit::GarbageDeposit(unsigned long ID, double x, double y, double z, u
 	this->z = z;
 
 	this->maxCapacity = maxCapacity;
-
-	if (capacityOccupied != 0)
-		this->capacityOccupied = capacityOccupied;
-	else if (maxCapacity != 0)
-		this->capacityOccupied = (rand() % maxCapacity);
-	else
-		this->capacityOccupied = 0;
+	this->capacityOccupied = capacityOccupied;
 };
 
 bool GarbageDeposit::operator==(const GarbageDeposit &gd) const {
@@ -94,13 +88,13 @@ string GarbageDeposit::print() const {
 
 
 void GarbageDeposit::setX(double X) {
-	this->x = x;
+	this->x = X;
 }
 
 void GarbageDeposit::setY(double Y) {
-	this->y = y;
+	this->y = Y;
 }
 
 void GarbageDeposit::setZ(double Z) {
-	this->z = z;
+	this->z = Z;
 }
