@@ -779,6 +779,11 @@ unsigned long GarbageCentral::searchAvailableDepositID() {
 }
 
 
+bool GarbageCentral::hasDrivers() const {
+	return drivers.size() > 0;
+}
+
+
 void GarbageCentral::test() {
 
 	vector<GarbageDeposit*> to_pick;

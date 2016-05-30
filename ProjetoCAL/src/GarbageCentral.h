@@ -273,6 +273,8 @@ public:
 
 	unsigned long searchAvailableDepositID();
 
+	bool hasDrivers() const;
+
 
 
 	/**

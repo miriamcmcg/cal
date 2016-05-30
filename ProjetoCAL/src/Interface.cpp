@@ -196,7 +196,11 @@ void mainMenu(GarbageCentral& gc){
 		switch (op)
 		{
 		case 1:
-			createPickRoute(gc);
+			try {
+				createPickRoute(gc);
+			} catch(NotEnoughDrivers &e) {
+				cout << "You must have drivers (insert them in text file).\n";
+			}
 			break;
 		case 2:
 			cout << "Trucks: " << endl << endl;
@@ -209,7 +213,6 @@ void mainMenu(GarbageCentral& gc){
 		case 4:
 			cout << "Streets: " << endl << endl;
 			gc.listRoads();
-			askRoad(gc);
 			break;
 		case 5:
 			updateCapacityOccupied(gc);
@@ -297,7 +300,11 @@ vector<unsigned int> manualPicking(GarbageCentral& gc, unsigned int truck_id){
 
 
 
-void createPickRoute(GarbageCentral& gc){
+void createPickRoute(GarbageCentral& gc) {
+
+	if (! gc.hasDrivers()) {
+		throw NotEnoughDrivers();
+	}
 
 	cout << "Trucks: " << endl << endl;
 	gc.listTrucks();
